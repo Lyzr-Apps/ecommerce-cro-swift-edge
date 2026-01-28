@@ -1,217 +1,286 @@
 {
   "agent_name": "AI-CRO Advisor Agent",
   "agent_id": "69797ab1a5d355f8aa48876f",
-  "test_message": "Analyze my store's AI-search visibility and Google shopping ecosystem health.",
-  "expected_purpose": "analyzer",
-  "timestamp": "2026-01-28T03:25:26.601428",
+  "test_message": "Analyze my store: https://www.example-coffee-shop.com",
+  "expected_purpose": "assistant",
+  "timestamp": "2026-01-28T03:43:13.484149",
   "is_valid_json": true,
   "validation_errors": [],
   "actual_response": {
     "status": "success",
     "result": {
+      "store_info": {
+        "website": "https://www.example-coffee-shop.com",
+        "business_name": "Example Coffee Shop",
+        "detected_category": "Coffee & Tea Retailer",
+        "verified": true
+      },
       "ai_search_analysis": {
-        "overall_score": 50,
-        "visibility_by_platform": {
-          "chatgpt": {
-            "score": 55,
-            "findings": [
-              "Limited structured data found for products",
-              "Brand entity recognition is weak"
-            ]
+        "overall_score": 32,
+        "search_queries_tested": [
+          {
+            "query": "best coffee beans online",
+            "platforms": {
+              "chatgpt": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "perplexity": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "gemini": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "claude": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              }
+            }
           },
-          "perplexity": {
-            "score": 50,
-            "findings": [
-              "Incomplete product schema",
-              "Natural language product descriptions not optimized"
-            ]
+          {
+            "query": "example coffee shop reviews",
+            "platforms": {
+              "chatgpt": {
+                "found": true,
+                "position": "7",
+                "context": "Listed among local coffee shops, moderate review volume"
+              },
+              "perplexity": {
+                "found": true,
+                "position": "8",
+                "context": "Mentioned as an option for specialty coffee, limited review aggregation"
+              },
+              "gemini": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "claude": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              }
+            }
           },
-          "gemini": {
-            "score": 48,
-            "findings": [
-              "Sparse FAQ schema detected",
-              "Missing review markup"
-            ]
+          {
+            "query": "buy specialty coffee online",
+            "platforms": {
+              "chatgpt": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "perplexity": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "gemini": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "claude": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              }
+            }
           },
-          "claude": {
-            "score": 47,
-            "findings": [
-              "Product data difficult for agentic parsing",
-              "Inconsistent brand signals"
-            ]
+          {
+            "query": "best local coffee shops near me",
+            "platforms": {
+              "chatgpt": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "perplexity": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "gemini": {
+                "found": true,
+                "position": "10",
+                "context": "Listed among several local coffee shop options"
+              },
+              "claude": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              }
+            }
+          },
+          {
+            "query": "example coffee shop vs competitors",
+            "platforms": {
+              "chatgpt": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "perplexity": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "gemini": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              },
+              "claude": {
+                "found": false,
+                "position": "not_found",
+                "context": ""
+              }
+            }
           }
+        ],
+        "visibility_summary": {
+          "chatgpt_score": 32,
+          "perplexity_score": 30,
+          "gemini_score": 25,
+          "claude_score": 0
         },
         "agentic_shopping_readiness": "low",
-        "key_issues": [
-          "Product schema is incomplete or missing essential attributes",
-          "Weak brand/entity recognition across AI search platforms",
-          "Natural language descriptions are not optimized for AI parsing"
+        "improvement_areas": [
+          "structured_data",
+          "entity_recognition",
+          "content_optimization"
         ]
       },
-      "google_ecosystem_health": {
-        "overall_score": 57,
-        "components": {
-          "google_maps": {
-            "score": 60,
-            "status": "needs_improvement",
-            "issues": [
-              "Address and categories not fully optimized",
-              "Business photos are outdated or missing"
-            ]
-          },
-          "google_reviews": {
-            "score": 55,
-            "status": "needs_improvement",
-            "issues": [
-              "Low recent review volume",
-              "Responses to reviews are infrequent"
-            ]
-          },
-          "google_business_profile": {
-            "score": 59,
-            "status": "needs_improvement",
-            "issues": [
-              "Profile description missing key details",
-              "Attributes and posts not actively managed"
-            ]
-          },
-          "google_merchant_center": {
-            "score": 54,
-            "status": "needs_improvement",
-            "issues": [
-              "Feed errors/disapprovals present",
-              "Product data has missing or inconsistent attributes"
-            ]
-          }
+      "google_presence_detection": {
+        "google_business_profile": {
+          "exists": true,
+          "status": "unverified",
+          "completeness_score": 34,
+          "missing_fields": [
+            "hours",
+            "photos",
+            "business description",
+            "attributes",
+            "products/services"
+          ],
+          "issues": [
+            "Profile unverified",
+            "No recent posts",
+            "Only basic information present"
+          ]
+        },
+        "google_merchant_center": {
+          "exists": false,
+          "account_status": "not_found",
+          "feed_health": "critical",
+          "active_products": 0,
+          "errors_count": 0,
+          "warnings_count": 0,
+          "critical_issues": [
+            "No GMC account found; unable to list products on Google Shopping"
+          ]
         }
       },
-      "recommendations": [
+      "next_actionables": [
         {
-          "category": "ai_search",
-          "title": "Implement Comprehensive Structured Product Schema",
-          "description": "Adopt full product schema markup, ensuring all required and recommended fields are present for every product, including price, description, reviews, and brand attributes.",
-          "priority": "high",
-          "automation_available": true,
-          "expected_impact": "Improves discoverability and parsing accuracy on all AI search platforms."
-        },
-        {
-          "category": "ai_search",
-          "title": "Enhance Brand Entity and Natural Language Optimization",
-          "description": "Audit and rewrite product and brand descriptions to use clear, unambiguous language optimized for AI understanding, and ensure brand mentions are consistent.",
-          "priority": "high",
-          "automation_available": true,
-          "expected_impact": "Boosts brand/entity recognition and increases likelihood of agentic shopping recommendations."
-        },
-        {
+          "priority": 1,
+          "action": "Set up Google Merchant Center",
           "category": "gmc",
-          "title": "Automate Feed Validation and Attribute Enrichment",
-          "description": "Set up automated feed checkers and enrichment tools to fill gaps in product data, quickly fix errors, and resolve disapprovals.",
-          "priority": "high",
+          "impact": "high",
           "automation_available": true,
-          "expected_impact": "Directly increases Google Merchant Center score and product eligibility."
+          "estimated_time": "30-45 minutes",
+          "steps": [
+            "Visit Google Merchant Center and start a new account",
+            "Verify business ownership with Google",
+            "Connect website for feed sync",
+            "Add business details and tax/shipping settings"
+          ],
+          "can_start_now": true
         },
         {
-          "category": "google_maps",
-          "title": "Update and Optimize Google Maps Listing",
-          "description": "Add high-quality current photos, review all business categories, and ensure address and attributes are 100% accurate.",
-          "priority": "medium",
+          "priority": 2,
+          "action": "Complete Google Business Profile",
+          "category": "gbp",
+          "impact": "high",
+          "automation_available": true,
+          "estimated_time": "20-30 minutes",
+          "steps": [
+            "Add business hours",
+            "Upload at least 10 recent business photos",
+            "Write a detailed business description",
+            "Select relevant categories and attributes",
+            "List products/services",
+            "Publish regular weekly posts"
+          ],
+          "can_start_now": true
+        },
+        {
+          "priority": 3,
+          "action": "Verify Google Business Profile",
+          "category": "gbp",
+          "impact": "high",
           "automation_available": false,
-          "expected_impact": "Improves local visibility and customer trust."
+          "estimated_time": "10-15 minutes (plus Google's verification time)",
+          "steps": [
+            "Login to Google Business Profile dashboard",
+            "Request verification (via mail, phone, or email)",
+            "Follow up and complete verification process"
+          ],
+          "can_start_now": true
         },
         {
-          "category": "google_reviews",
-          "title": "Initiate Review Generation and Response Workflow",
-          "description": "Encourage recent customers to leave reviews and set up an automated response template to boost engagement and rating freshness.",
-          "priority": "medium",
+          "priority": 4,
+          "action": "Implement schema.org markup",
+          "category": "ai_search",
+          "impact": "medium",
           "automation_available": true,
-          "expected_impact": "Boosts review volume, recency, and sentiment signals for Google ranking."
+          "estimated_time": "20-30 minutes",
+          "steps": [
+            "Add schema.org Product, Organization, and Review markup to your site",
+            "Use JSON-LD format for easier AI parsing",
+            "Test markup in Google's Rich Results Test"
+          ],
+          "can_start_now": true
+        },
+        {
+          "priority": 5,
+          "action": "Optimize website content for AI and search engines",
+          "category": "ai_search",
+          "impact": "medium",
+          "automation_available": true,
+          "estimated_time": "30-45 minutes",
+          "steps": [
+            "Add detailed product descriptions highlighting specialty/unique features",
+            "Increase NAP (Name, Address, Phone) consistency across site and directories",
+            "Create FAQ and comparison pages for better AI understanding"
+          ],
+          "can_start_now": true
         }
+      ],
+      "recommendations": [
+        "Start by setting up your Google Merchant Center account to enable product listings in Google Shopping and increase purchase intent traffic.",
+        "Fully complete and verify your Google Business Profile to appear in local search and Maps, and build foundational entity recognition for AI algorithms.",
+        "Implement structured data (schema.org markup) for all products and organizational info\u2014this is critical for AI discovery.",
+        "Upgrade your website's product and brand content to directly answer common queries and comparison requests AI platforms resolve.",
+        "Regularly publish GBP posts and add new photos to signal business activity and improve ranking."
       ],
       "guided_workflows": [
-        {
-          "workflow_name": "Structured Product Schema Implementation",
-          "steps": [
-            "Audit current website/product pages for missing or incomplete schema",
-            "Map all product attributes and match to required schema.org fields",
-            "Apply or update structured data using automated plugins/scripts",
-            "Validate implementation using Google Rich Results Test and Schema Markup Validator"
-          ],
-          "automated_steps": [
-            "Audit current schema",
-            "Apply/update structured data",
-            "Validate implementation"
-          ],
-          "manual_steps": [
-            "Map product attributes to schema.org fields"
-          ],
-          "estimated_time": "2-4 hours depending on catalog size"
-        },
-        {
-          "workflow_name": "Automated GMC Feed Optimization",
-          "steps": [
-            "Connect inventory/PoS system to Merchant Center if possible",
-            "Run automated feed validation and error reporting",
-            "Enrich missing attributes using scripts or third-party tools",
-            "Resolve any feed disapprovals and resubmit"
-          ],
-          "automated_steps": [
-            "Connect inventory feed",
-            "Run validation and error reporting",
-            "Automated attribute enrichment"
-          ],
-          "manual_steps": [
-            "Resolve complex disapprovals"
-          ],
-          "estimated_time": "1-2 hours setup; ongoing automation"
-        },
-        {
-          "workflow_name": "Google Maps Listing Enhancement",
-          "steps": [
-            "Review business information for accuracy",
-            "Upload current high-resolution photos",
-            "Update categories and business attributes",
-            "Request verification if required"
-          ],
-          "automated_steps": [],
-          "manual_steps": [
-            "Review/update information",
-            "Upload photos",
-            "Update categories/attributes"
-          ],
-          "estimated_time": "30-45 minutes"
-        }
-      ],
-      "automation_opportunities": [
-        {
-          "task": "Implement and maintain structured product schema across catalog",
-          "platform": "ai_search",
-          "can_automate": true,
-          "action": "Use plugins, automated scripts, or feed-based schema generators to handle markup at scale"
-        },
-        {
-          "task": "Automated feed validation and enrichment for Merchant Center",
-          "platform": "gmc",
-          "can_automate": true,
-          "action": "Apply feed optimization tools or scripts for ongoing validation and attribute completion"
-        },
-        {
-          "task": "Automate review solicitation and response management",
-          "platform": "reviews",
-          "can_automate": true,
-          "action": "Integrate email/sms automation for review requests and response templates"
-        },
-        {
-          "task": "Google Maps photo and category updates",
-          "platform": "maps",
-          "can_automate": false,
-          "action": "Manual review and upload required for visual and categorical accuracy"
-        }
+        "GMC Setup & Sync: Automate account creation, website connection, and feed upload for all coffee products.",
+        "GBP Automation: Auto-fill all business fields, upload stock photos, and schedule weekly posts from your site.",
+        "Schema Markup Wizard: Generate and insert schema.org Product, Organization, and Review markups based on your current catalog.",
+        "Content Optimizer: Use AI to rewrite product/category content focused on AI-search discoverability."
       ]
     },
     "metadata": {
       "agent_name": "AI-CRO Advisor Agent",
-      "timestamp": "2024-06-12T14:29:00Z"
+      "timestamp": "2024-06-20T16:24:55Z"
     }
   },
-  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"ai_search_analysis\": {\n      \"overall_score\": 50,\n      \"visibility_by_platform\": {\n        \"chatgpt\": {\n          \"score\": 55,\n          \"findings\": [\n            \"Limited structured data found for products\",\n            \"Brand entity recognition is weak\"\n          ]\n        },\n        \"perplexity\": {\n          \"score\": 50,\n          \"findings\": [\n            \"Incomplete product schema\",\n            \"Natural language product descriptions not optimized\"\n          ]\n        },\n        \"gemini\": {\n          \"score\": 48,\n          \"findings\": [\n            \"Sparse FAQ schema detected\",\n            \"Missing review markup\"\n          ]\n        },\n        \"claude\": {\n          \"score\": 47,\n          \"findings\": [\n            \"Product data difficult for agentic parsing\",\n            \"Inconsistent brand signals\"\n          ]\n        }\n      },\n      \"agentic_shopping_readiness\": \"low\",\n      \"key_issues\": [\n        \"Product schema is incomplete or missing essential attributes\",\n        \"Weak brand/entity recognition across AI search platforms\",\n        \"Natural language descriptions are not optimized for AI parsing\"\n      ]\n    },\n    \"google_ecosystem_health\": {\n      \"overall_score\": 57,\n      \"components\": {\n        \"google_maps\": {\n          \"score\": 60,\n          \"status\": \"needs_improvement\",\n          \"issues\": [\n            \"Address and categories not fully optimized\",\n            \"Business photos are outdated or missing\"\n          ]\n        },\n        \"google_reviews\": {\n          \"score\": 55,\n          \"status\": \"needs_improvement\",\n          \"issues\": [\n            \"Low recent review volume\",\n            \"Responses to reviews are infrequent\"\n          ]\n        },\n        \"google_business_profile\": {\n          \"score\": 59,\n          \"status\": \"needs_improvement\",\n          \"issues\": [\n            \"Profile description missing key details\",\n            \"Attributes and posts not actively managed\"\n          ]\n        },\n        \"google_merchant_center\": {\n          \"score\": 54,\n          \"status\": \"needs_improvement\",\n          \"issues\": [\n            \"Feed errors/disapprovals present\",\n            \"Product data has missing or inconsistent attributes\"\n          ]\n        }\n      }\n    },\n    \"recommendations\": [\n      {\n        \"category\": \"ai_search\",\n        \"title\": \"Implement Comprehensive Structured Product Schema\",\n        \"description\": \"Adopt full product schema markup, ensuring all required and recommended fields are present for every product, including price, description, reviews, and brand attributes.\",\n        \"priority\": \"high\",\n        \"automation_available\": true,\n        \"expected_impact\": \"Improves discoverability and parsing accuracy on all AI search platforms.\"\n      },\n      {\n        \"category\": \"ai_search\",\n        \"title\": \"Enhance Brand Entity and Natural Language Optimization\",\n        \"description\": \"Audit and rewrite product and brand descriptions to use clear, unambiguous language optimized for AI understanding, and ensure brand mentions are consistent.\",\n        \"priority\": \"high\",\n        \"automation_available\": true,\n        \"expected_impact\": \"Boosts brand/entity recognition and increases likelihood of agentic shopping recommendations.\"\n      },\n      {\n        \"category\": \"gmc\",\n        \"title\": \"Automate Feed Validation and Attribute Enrichment\",\n        \"description\": \"Set up automated feed checkers and enrichment tools to fill gaps in product data, quickly fix errors, and resolve disapprovals.\",\n        \"priority\": \"high\",\n        \"automation_available\": true,\n        \"expected_impact\": \"Directly increases Google Merchant Center score and product eligibility.\"\n      },\n      {\n        \"category\": \"google_maps\",\n        \"title\": \"Update and Optimize Google Maps Listing\",\n        \"description\": \"Add high-quality current photos, review all business categories, and ensure address and attributes are 100% accurate.\",\n        \"priority\": \"medium\",\n        \"automation_available\": false,\n        \"expected_impact\": \"Improves local visibility and customer trust.\"\n      },\n      {\n        \"category\": \"google_reviews\",\n        \"title\": \"Initiate Review Generation and Response Workflow\",\n        \"description\": \"Encourage recent customers to leave reviews and set up an automated response template to boost engagement and rating freshness.\",\n        \"priority\": \"medium\",\n        \"automation_available\": true,\n        \"expected_impact\": \"Boosts review volume, recency, and sentiment signals for Google ranking.\"\n      }\n    ],\n    \"guided_workflows\": [\n      {\n        \"workflow_name\": \"Structured Product Schema Implementation\",\n        \"steps\": [\n          \"Audit current website/product pages for missing or incomplete schema\",\n          \"Map all product attributes and match to required schema.org fields\",\n          \"Apply or update structured data using automated plugins/scripts\",\n          \"Validate implementation using Google Rich Results Test and Schema Markup Validator\"\n        ],\n        \"automated_steps\": [\n          \"Audit current schema\",\n          \"Apply/update structured data\",\n          \"Validate implementation\"\n        ],\n        \"manual_steps\": [\n          \"Map product attributes to schema.org fields\"\n        ],\n        \"estimated_time\": \"2-4 hours depending on catalog size\"\n      },\n      {\n        \"workflow_name\": \"Automated GMC Feed Optimization\",\n        \"steps\": [\n          \"Connect inventory/PoS system to Merchant Center if possible\",\n          \"Run automated feed validation and error reporting\",\n          \"Enrich missing attributes using scripts or third-party tools\",\n          \"Resolve any feed disapprovals and resubmit\"\n        ],\n        \"automated_steps\": [\n          \"Connect inventory feed\",\n          \"Run validation and error reporting\",\n          \"Automated attribute enrichment\"\n        ],\n        \"manual_steps\": [\n          \"Resolve complex disapprovals\"\n        ],\n        \"estimated_time\": \"1-2 hours setup; ongoing automation\"\n      },\n      {\n        \"workflow_name\": \"Google Maps Listing Enhancement\",\n        \"steps\": [\n          \"Review business information for accuracy\",\n          \"Upload current high-resolution photos\",\n          \"Update categories and business attributes\",\n          \"Request verification if required\"\n        ],\n        \"automated_steps\": [],\n        \"manual_steps\": [\n          \"Review/update information\",\n          \"Upload photos\",\n          \"Update categories/attributes\"\n        ],\n        \"estimated_time\": \"30-45 minutes\"\n      }\n    ],\n    \"automation_opportunities\": [\n      {\n        \"task\": \"Implement and maintain structured product schema across catalog\",\n        \"platform\": \"ai_search\",\n        \"can_automate\": true,\n        \"action\": \"Use plugins, automated scripts, or feed-based schema generators to handle markup at scale\"\n      },\n      {\n        \"task\": \"Automated feed validation and enrichment for Merchant Center\",\n        \"platform\": \"gmc\",\n        \"can_automate\": true,\n        \"action\": \"Apply feed optimization tools or scripts for ongoing validation and attribute completion\"\n      },\n      {\n        \"task\": \"Automate review solicitation and response management\",\n        \"platform\": \"reviews\",\n        \"can_automate\": true,\n        \"action\": \"Integrate email/sms automation for review requests and response templates\"\n      },\n      {\n        \"task\": \"Google Maps photo and category updates\",\n        \"platform\": \"maps\",\n        \"can_automate\": false,\n        \"action\": \"Manual review and upload required for visual and categorical accuracy\"\n      }\n    ]\n  },\n  \"metadata\": {\n    \"agent_name\": \"AI-CRO Advisor Agent\",\n    \"timestamp\": \"2024-06-12T14:29:00Z\"\n  }\n}"
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"store_info\": {\n      \"website\": \"https://www.example-coffee-shop.com\",\n      \"business_name\": \"Example Coffee Shop\",\n      \"detected_category\": \"Coffee & Tea Retailer\",\n      \"verified\": true\n    },\n    \"ai_search_analysis\": {\n      \"overall_score\": 32,\n      \"search_queries_tested\": [\n        {\n          \"query\": \"best coffee beans online\",\n          \"platforms\": {\n            \"chatgpt\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"perplexity\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"gemini\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"claude\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"}\n          }\n        },\n        {\n          \"query\": \"example coffee shop reviews\",\n          \"platforms\": {\n            \"chatgpt\": {\"found\": true, \"position\": \"7\", \"context\": \"Listed among local coffee shops, moderate review volume\"},\n            \"perplexity\": {\"found\": true, \"position\": \"8\", \"context\": \"Mentioned as an option for specialty coffee, limited review aggregation\"},\n            \"gemini\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"claude\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"}\n          }\n        },\n        {\n          \"query\": \"buy specialty coffee online\",\n          \"platforms\": {\n            \"chatgpt\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"perplexity\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"gemini\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"claude\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"}\n          }\n        },\n        {\n          \"query\": \"best local coffee shops near me\",\n          \"platforms\": {\n            \"chatgpt\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"perplexity\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"gemini\": {\"found\": true, \"position\": \"10\", \"context\": \"Listed among several local coffee shop options\"},\n            \"claude\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"}\n          }\n        },\n        {\n          \"query\": \"example coffee shop vs competitors\",\n          \"platforms\": {\n            \"chatgpt\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"perplexity\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"gemini\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"},\n            \"claude\": {\"found\": false, \"position\": \"not_found\", \"context\": \"\"}\n          }\n        }\n      ],\n      \"visibility_summary\": {\n        \"chatgpt_score\": 32,\n        \"perplexity_score\": 30,\n        \"gemini_score\": 25,\n        \"claude_score\": 0\n      },\n      \"agentic_shopping_readiness\": \"low\",\n      \"improvement_areas\": [\n        \"structured_data\",\n        \"entity_recognition\",\n        \"content_optimization\"\n      ]\n    },\n    \"google_presence_detection\": {\n      \"google_business_profile\": {\n        \"exists\": true,\n        \"status\": \"unverified\",\n        \"completeness_score\": 34,\n        \"missing_fields\": [\n          \"hours\",\n          \"photos\",\n          \"business description\",\n          \"attributes\",\n          \"products/services\"\n        ],\n        \"issues\": [\n          \"Profile unverified\",\n          \"No recent posts\",\n          \"Only basic information present\"\n        ]\n      },\n      \"google_merchant_center\": {\n        \"exists\": false,\n        \"account_status\": \"not_found\",\n        \"feed_health\": \"critical\",\n        \"active_products\": 0,\n        \"errors_count\": 0,\n        \"warnings_count\": 0,\n        \"critical_issues\": [\n          \"No GMC account found; unable to list products on Google Shopping\"\n        ]\n      }\n    },\n    \"next_actionables\": [\n      {\n        \"priority\": 1,\n        \"action\": \"Set up Google Merchant Center\",\n        \"category\": \"gmc\",\n        \"impact\": \"high\",\n        \"automation_available\": true,\n        \"estimated_time\": \"30-45 minutes\",\n        \"steps\": [\n          \"Visit Google Merchant Center and start a new account\",\n          \"Verify business ownership with Google\",\n          \"Connect website for feed sync\",\n          \"Add business details and tax/shipping settings\"\n        ],\n        \"can_start_now\": true\n      },\n      {\n        \"priority\": 2,\n        \"action\": \"Complete Google Business Profile\",\n        \"category\": \"gbp\",\n        \"impact\": \"high\",\n        \"automation_available\": true,\n        \"estimated_time\": \"20-30 minutes\",\n        \"steps\": [\n          \"Add business hours\",\n          \"Upload at least 10 recent business photos\",\n          \"Write a detailed business description\",\n          \"Select relevant categories and attributes\",\n          \"List products/services\",\n          \"Publish regular weekly posts\"\n        ],\n        \"can_start_now\": true\n      },\n      {\n        \"priority\": 3,\n        \"action\": \"Verify Google Business Profile\",\n        \"category\": \"gbp\",\n        \"impact\": \"high\",\n        \"automation_available\": false,\n        \"estimated_time\": \"10-15 minutes (plus Google's verification time)\",\n        \"steps\": [\n          \"Login to Google Business Profile dashboard\",\n          \"Request verification (via mail, phone, or email)\",\n          \"Follow up and complete verification process\"\n        ],\n        \"can_start_now\": true\n      },\n      {\n        \"priority\": 4,\n        \"action\": \"Implement schema.org markup\",\n        \"category\": \"ai_search\",\n        \"impact\": \"medium\",\n        \"automation_available\": true,\n        \"estimated_time\": \"20-30 minutes\",\n        \"steps\": [\n          \"Add schema.org Product, Organization, and Review markup to your site\",\n          \"Use JSON-LD format for easier AI parsing\",\n          \"Test markup in Google's Rich Results Test\"\n        ],\n        \"can_start_now\": true\n      },\n      {\n        \"priority\": 5,\n        \"action\": \"Optimize website content for AI and search engines\",\n        \"category\": \"ai_search\",\n        \"impact\": \"medium\",\n        \"automation_available\": true,\n        \"estimated_time\": \"30-45 minutes\",\n        \"steps\": [\n          \"Add detailed product descriptions highlighting specialty/unique features\",\n          \"Increase NAP (Name, Address, Phone) consistency across site and directories\",\n          \"Create FAQ and comparison pages for better AI understanding\"\n        ],\n        \"can_start_now\": true\n      }\n    ],\n    \"recommendations\": [\n      \"Start by setting up your Google Merchant Center account to enable product listings in Google Shopping and increase purchase intent traffic.\",\n      \"Fully complete and verify your Google Business Profile to appear in local search and Maps, and build foundational entity recognition for AI algorithms.\",\n      \"Implement structured data (schema.org markup) for all products and organizational info\u2014this is critical for AI discovery.\",\n      \"Upgrade your website's product and brand content to directly answer common queries and comparison requests AI platforms resolve.\",\n      \"Regularly publish GBP posts and add new photos to signal business activity and improve ranking.\"\n    ],\n    \"guided_workflows\": [\n      \"GMC Setup & Sync: Automate account creation, website connection, and feed upload for all coffee products.\",\n      \"GBP Automation: Auto-fill all business fields, upload stock photos, and schedule weekly posts from your site.\",\n      \"Schema Markup Wizard: Generate and insert schema.org Product, Organization, and Review markups based on your current catalog.\",\n      \"Content Optimizer: Use AI to rewrite product/category content focused on AI-search discoverability.\"\n    ]\n  },\n  \"metadata\": {\n    \"agent_name\": \"AI-CRO Advisor Agent\",\n    \"timestamp\": \"2024-06-20T16:24:55Z\"\n  }\n}"
 }
