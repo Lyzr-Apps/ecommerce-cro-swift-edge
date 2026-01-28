@@ -1,13 +1,14 @@
 {
-  "name": "project",
+  "name": "aimpler",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3333",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 3333",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "deploy:cloudflare": "npm run build && wrangler pages deploy dist --project-name=aimpler"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
