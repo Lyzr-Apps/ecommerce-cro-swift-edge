@@ -283,7 +283,7 @@ function PermissionRequestModal({
             </div>
             <div>
               <DialogTitle className="text-xl">
-                AI-CRO Wants to Optimize Your Google Merchant Center
+                Aimpler Wants to Optimize Your Google Merchant Center
               </DialogTitle>
               <Badge className="mt-1 bg-teal-100 text-teal-800">
                 <Shield className="h-3 w-3 mr-1" />
@@ -294,9 +294,9 @@ function PermissionRequestModal({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* What AI-CRO Will Do */}
+          {/* What Aimpler Will Do */}
           <div>
-            <h3 className="font-semibold text-slate-900 mb-3">What AI-CRO Will Do:</h3>
+            <h3 className="font-semibold text-slate-900 mb-3">What Aimpler Will Do:</h3>
             <div className="space-y-2">
               {permissionRequest.actions_planned.map((action, idx) => (
                 <div key={idx} className="flex items-start gap-2">
@@ -1629,7 +1629,7 @@ export default function Home() {
 
   // Check if user has completed onboarding
   useEffect(() => {
-    const completed = localStorage.getItem('ai_cro_onboarding_complete')
+    const completed = localStorage.getItem('aimpler_onboarding_complete')
     if (completed === 'true') {
       setOnboardingComplete(true)
       setCurrentView('dashboard')
@@ -1653,7 +1653,7 @@ export default function Home() {
         const agentResult = result.response.result as AgentResult
         setAnalysisResult(agentResult)
         setOnboardingComplete(true)
-        localStorage.setItem('ai_cro_onboarding_complete', 'true')
+        localStorage.setItem('aimpler_onboarding_complete', 'true')
         setCurrentView('dashboard')
       } else {
         console.error('Analysis failed:', result.error)
@@ -1765,7 +1765,7 @@ export default function Home() {
         } bg-[#1a1f36] text-white transition-all duration-300 overflow-hidden`}
       >
         <div className="p-6">
-          <h1 className="text-xl font-bold text-[#00d4aa]">AI-CRO Advisor</h1>
+          <h1 className="text-xl font-bold text-[#00d4aa]">Aimpler</h1>
         </div>
         <nav className="space-y-1 px-3">
           <button
@@ -2126,7 +2126,7 @@ export default function Home() {
           <div className="bg-[#1a1f36] text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5 text-[#00d4aa]" />
-              <h3 className="font-semibold">AI-CRO Advisor</h3>
+              <h3 className="font-semibold">Aimpler</h3>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setChatOpen(false)}>
               <X className="h-4 w-4 text-white" />
