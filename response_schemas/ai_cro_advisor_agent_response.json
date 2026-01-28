@@ -1,0 +1,532 @@
+{
+  "agent_name": "AI-CRO Advisor Agent",
+  "agent_id": "69797ab1a5d355f8aa48876f",
+  "agent_purpose": "analyzer",
+  "description": "Analyzes AI-search visibility across platforms (ChatGPT, Perplexity, Gemini, Claude) and Google shopping ecosystem health (Maps, Reviews, Business Profile, Merchant Center) with automation-first recommendations",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "ai_search_analysis": {
+        "overall_score": "number",
+        "visibility_by_platform": {
+          "chatgpt": {
+            "score": "number",
+            "findings": [
+              "string"
+            ]
+          },
+          "perplexity": {
+            "score": "number",
+            "findings": [
+              "string"
+            ]
+          },
+          "gemini": {
+            "score": "number",
+            "findings": [
+              "string"
+            ]
+          },
+          "claude": {
+            "score": "number",
+            "findings": [
+              "string"
+            ]
+          }
+        },
+        "agentic_shopping_readiness": "string",
+        "key_issues": [
+          "string"
+        ]
+      },
+      "google_ecosystem_health": {
+        "overall_score": "number",
+        "components": {
+          "google_maps": {
+            "score": "number",
+            "status": "string",
+            "issues": [
+              "string"
+            ]
+          },
+          "google_reviews": {
+            "score": "number",
+            "status": "string",
+            "issues": [
+              "string"
+            ]
+          },
+          "google_business_profile": {
+            "score": "number",
+            "status": "string",
+            "issues": [
+              "string"
+            ]
+          },
+          "google_merchant_center": {
+            "score": "number",
+            "status": "string",
+            "issues": [
+              "string"
+            ]
+          }
+        }
+      },
+      "recommendations": [
+        {
+          "category": "string",
+          "title": "string",
+          "description": "string",
+          "priority": "string",
+          "automation_available": "boolean",
+          "expected_impact": "string"
+        }
+      ],
+      "guided_workflows": [
+        {
+          "workflow_name": "string",
+          "steps": [
+            "string"
+          ],
+          "automated_steps": [
+            "string"
+          ],
+          "manual_steps": [
+            "string"
+          ],
+          "estimated_time": "string"
+        }
+      ],
+      "automation_opportunities": [
+        {
+          "task": "string",
+          "platform": "string",
+          "can_automate": "boolean",
+          "action": "string"
+        }
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "ai_search_analysis": {
+        "overall_score": 50,
+        "visibility_by_platform": {
+          "chatgpt": {
+            "score": 55,
+            "findings": [
+              "Limited structured data found for products",
+              "Brand entity recognition is weak"
+            ]
+          },
+          "perplexity": {
+            "score": 50,
+            "findings": [
+              "Incomplete product schema",
+              "Natural language product descriptions not optimized"
+            ]
+          },
+          "gemini": {
+            "score": 48,
+            "findings": [
+              "Sparse FAQ schema detected",
+              "Missing review markup"
+            ]
+          },
+          "claude": {
+            "score": 47,
+            "findings": [
+              "Product data difficult for agentic parsing",
+              "Inconsistent brand signals"
+            ]
+          }
+        },
+        "agentic_shopping_readiness": "low",
+        "key_issues": [
+          "Product schema is incomplete or missing essential attributes",
+          "Weak brand/entity recognition across AI search platforms",
+          "Natural language descriptions are not optimized for AI parsing"
+        ]
+      },
+      "google_ecosystem_health": {
+        "overall_score": 57,
+        "components": {
+          "google_maps": {
+            "score": 60,
+            "status": "needs_improvement",
+            "issues": [
+              "Address and categories not fully optimized",
+              "Business photos are outdated or missing"
+            ]
+          },
+          "google_reviews": {
+            "score": 55,
+            "status": "needs_improvement",
+            "issues": [
+              "Low recent review volume",
+              "Responses to reviews are infrequent"
+            ]
+          },
+          "google_business_profile": {
+            "score": 59,
+            "status": "needs_improvement",
+            "issues": [
+              "Profile description missing key details",
+              "Attributes and posts not actively managed"
+            ]
+          },
+          "google_merchant_center": {
+            "score": 54,
+            "status": "needs_improvement",
+            "issues": [
+              "Feed errors/disapprovals present",
+              "Product data has missing or inconsistent attributes"
+            ]
+          }
+        }
+      },
+      "recommendations": [
+        {
+          "category": "ai_search",
+          "title": "Implement Comprehensive Structured Product Schema",
+          "description": "Adopt full product schema markup, ensuring all required and recommended fields are present for every product, including price, description, reviews, and brand attributes.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Improves discoverability and parsing accuracy on all AI search platforms."
+        },
+        {
+          "category": "ai_search",
+          "title": "Enhance Brand Entity and Natural Language Optimization",
+          "description": "Audit and rewrite product and brand descriptions to use clear, unambiguous language optimized for AI understanding, and ensure brand mentions are consistent.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Boosts brand/entity recognition and increases likelihood of agentic shopping recommendations."
+        },
+        {
+          "category": "gmc",
+          "title": "Automate Feed Validation and Attribute Enrichment",
+          "description": "Set up automated feed checkers and enrichment tools to fill gaps in product data, quickly fix errors, and resolve disapprovals.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Directly increases Google Merchant Center score and product eligibility."
+        },
+        {
+          "category": "google_maps",
+          "title": "Update and Optimize Google Maps Listing",
+          "description": "Add high-quality current photos, review all business categories, and ensure address and attributes are 100% accurate.",
+          "priority": "medium",
+          "automation_available": false,
+          "expected_impact": "Improves local visibility and customer trust."
+        },
+        {
+          "category": "google_reviews",
+          "title": "Initiate Review Generation and Response Workflow",
+          "description": "Encourage recent customers to leave reviews and set up an automated response template to boost engagement and rating freshness.",
+          "priority": "medium",
+          "automation_available": true,
+          "expected_impact": "Boosts review volume, recency, and sentiment signals for Google ranking."
+        }
+      ],
+      "guided_workflows": [
+        {
+          "workflow_name": "Structured Product Schema Implementation",
+          "steps": [
+            "Audit current website/product pages for missing or incomplete schema",
+            "Map all product attributes and match to required schema.org fields",
+            "Apply or update structured data using automated plugins/scripts",
+            "Validate implementation using Google Rich Results Test and Schema Markup Validator"
+          ],
+          "automated_steps": [
+            "Audit current schema",
+            "Apply/update structured data",
+            "Validate implementation"
+          ],
+          "manual_steps": [
+            "Map product attributes to schema.org fields"
+          ],
+          "estimated_time": "2-4 hours depending on catalog size"
+        },
+        {
+          "workflow_name": "Automated GMC Feed Optimization",
+          "steps": [
+            "Connect inventory/PoS system to Merchant Center if possible",
+            "Run automated feed validation and error reporting",
+            "Enrich missing attributes using scripts or third-party tools",
+            "Resolve any feed disapprovals and resubmit"
+          ],
+          "automated_steps": [
+            "Connect inventory feed",
+            "Run validation and error reporting",
+            "Automated attribute enrichment"
+          ],
+          "manual_steps": [
+            "Resolve complex disapprovals"
+          ],
+          "estimated_time": "1-2 hours setup; ongoing automation"
+        },
+        {
+          "workflow_name": "Google Maps Listing Enhancement",
+          "steps": [
+            "Review business information for accuracy",
+            "Upload current high-resolution photos",
+            "Update categories and business attributes",
+            "Request verification if required"
+          ],
+          "automated_steps": [],
+          "manual_steps": [
+            "Review/update information",
+            "Upload photos",
+            "Update categories/attributes"
+          ],
+          "estimated_time": "30-45 minutes"
+        }
+      ],
+      "automation_opportunities": [
+        {
+          "task": "Implement and maintain structured product schema across catalog",
+          "platform": "ai_search",
+          "can_automate": true,
+          "action": "Use plugins, automated scripts, or feed-based schema generators to handle markup at scale"
+        },
+        {
+          "task": "Automated feed validation and enrichment for Merchant Center",
+          "platform": "gmc",
+          "can_automate": true,
+          "action": "Apply feed optimization tools or scripts for ongoing validation and attribute completion"
+        },
+        {
+          "task": "Automate review solicitation and response management",
+          "platform": "reviews",
+          "can_automate": true,
+          "action": "Integrate email/sms automation for review requests and response templates"
+        },
+        {
+          "task": "Google Maps photo and category updates",
+          "platform": "maps",
+          "can_automate": false,
+          "action": "Manual review and upload required for visual and categorical accuracy"
+        }
+      ]
+    },
+    "metadata": {
+      "agent_name": "AI-CRO Advisor Agent",
+      "timestamp": "2024-06-12T14:29:00Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-28T03:25:26.602875",
+  "test_message_used": "Analyze this sample data for testing",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "ai_search_analysis": {
+        "overall_score": 50,
+        "visibility_by_platform": {
+          "chatgpt": {
+            "score": 55,
+            "findings": [
+              "Limited structured data found for products",
+              "Brand entity recognition is weak"
+            ]
+          },
+          "perplexity": {
+            "score": 50,
+            "findings": [
+              "Incomplete product schema",
+              "Natural language product descriptions not optimized"
+            ]
+          },
+          "gemini": {
+            "score": 48,
+            "findings": [
+              "Sparse FAQ schema detected",
+              "Missing review markup"
+            ]
+          },
+          "claude": {
+            "score": 47,
+            "findings": [
+              "Product data difficult for agentic parsing",
+              "Inconsistent brand signals"
+            ]
+          }
+        },
+        "agentic_shopping_readiness": "low",
+        "key_issues": [
+          "Product schema is incomplete or missing essential attributes",
+          "Weak brand/entity recognition across AI search platforms",
+          "Natural language descriptions are not optimized for AI parsing"
+        ]
+      },
+      "google_ecosystem_health": {
+        "overall_score": 57,
+        "components": {
+          "google_maps": {
+            "score": 60,
+            "status": "needs_improvement",
+            "issues": [
+              "Address and categories not fully optimized",
+              "Business photos are outdated or missing"
+            ]
+          },
+          "google_reviews": {
+            "score": 55,
+            "status": "needs_improvement",
+            "issues": [
+              "Low recent review volume",
+              "Responses to reviews are infrequent"
+            ]
+          },
+          "google_business_profile": {
+            "score": 59,
+            "status": "needs_improvement",
+            "issues": [
+              "Profile description missing key details",
+              "Attributes and posts not actively managed"
+            ]
+          },
+          "google_merchant_center": {
+            "score": 54,
+            "status": "needs_improvement",
+            "issues": [
+              "Feed errors/disapprovals present",
+              "Product data has missing or inconsistent attributes"
+            ]
+          }
+        }
+      },
+      "recommendations": [
+        {
+          "category": "ai_search",
+          "title": "Implement Comprehensive Structured Product Schema",
+          "description": "Adopt full product schema markup, ensuring all required and recommended fields are present for every product, including price, description, reviews, and brand attributes.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Improves discoverability and parsing accuracy on all AI search platforms."
+        },
+        {
+          "category": "ai_search",
+          "title": "Enhance Brand Entity and Natural Language Optimization",
+          "description": "Audit and rewrite product and brand descriptions to use clear, unambiguous language optimized for AI understanding, and ensure brand mentions are consistent.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Boosts brand/entity recognition and increases likelihood of agentic shopping recommendations."
+        },
+        {
+          "category": "gmc",
+          "title": "Automate Feed Validation and Attribute Enrichment",
+          "description": "Set up automated feed checkers and enrichment tools to fill gaps in product data, quickly fix errors, and resolve disapprovals.",
+          "priority": "high",
+          "automation_available": true,
+          "expected_impact": "Directly increases Google Merchant Center score and product eligibility."
+        },
+        {
+          "category": "google_maps",
+          "title": "Update and Optimize Google Maps Listing",
+          "description": "Add high-quality current photos, review all business categories, and ensure address and attributes are 100% accurate.",
+          "priority": "medium",
+          "automation_available": false,
+          "expected_impact": "Improves local visibility and customer trust."
+        },
+        {
+          "category": "google_reviews",
+          "title": "Initiate Review Generation and Response Workflow",
+          "description": "Encourage recent customers to leave reviews and set up an automated response template to boost engagement and rating freshness.",
+          "priority": "medium",
+          "automation_available": true,
+          "expected_impact": "Boosts review volume, recency, and sentiment signals for Google ranking."
+        }
+      ],
+      "guided_workflows": [
+        {
+          "workflow_name": "Structured Product Schema Implementation",
+          "steps": [
+            "Audit current website/product pages for missing or incomplete schema",
+            "Map all product attributes and match to required schema.org fields",
+            "Apply or update structured data using automated plugins/scripts",
+            "Validate implementation using Google Rich Results Test and Schema Markup Validator"
+          ],
+          "automated_steps": [
+            "Audit current schema",
+            "Apply/update structured data",
+            "Validate implementation"
+          ],
+          "manual_steps": [
+            "Map product attributes to schema.org fields"
+          ],
+          "estimated_time": "2-4 hours depending on catalog size"
+        },
+        {
+          "workflow_name": "Automated GMC Feed Optimization",
+          "steps": [
+            "Connect inventory/PoS system to Merchant Center if possible",
+            "Run automated feed validation and error reporting",
+            "Enrich missing attributes using scripts or third-party tools",
+            "Resolve any feed disapprovals and resubmit"
+          ],
+          "automated_steps": [
+            "Connect inventory feed",
+            "Run validation and error reporting",
+            "Automated attribute enrichment"
+          ],
+          "manual_steps": [
+            "Resolve complex disapprovals"
+          ],
+          "estimated_time": "1-2 hours setup; ongoing automation"
+        },
+        {
+          "workflow_name": "Google Maps Listing Enhancement",
+          "steps": [
+            "Review business information for accuracy",
+            "Upload current high-resolution photos",
+            "Update categories and business attributes",
+            "Request verification if required"
+          ],
+          "automated_steps": [],
+          "manual_steps": [
+            "Review/update information",
+            "Upload photos",
+            "Update categories/attributes"
+          ],
+          "estimated_time": "30-45 minutes"
+        }
+      ],
+      "automation_opportunities": [
+        {
+          "task": "Implement and maintain structured product schema across catalog",
+          "platform": "ai_search",
+          "can_automate": true,
+          "action": "Use plugins, automated scripts, or feed-based schema generators to handle markup at scale"
+        },
+        {
+          "task": "Automated feed validation and enrichment for Merchant Center",
+          "platform": "gmc",
+          "can_automate": true,
+          "action": "Apply feed optimization tools or scripts for ongoing validation and attribute completion"
+        },
+        {
+          "task": "Automate review solicitation and response management",
+          "platform": "reviews",
+          "can_automate": true,
+          "action": "Integrate email/sms automation for review requests and response templates"
+        },
+        {
+          "task": "Google Maps photo and category updates",
+          "platform": "maps",
+          "can_automate": false,
+          "action": "Manual review and upload required for visual and categorical accuracy"
+        }
+      ]
+    },
+    "metadata": {
+      "agent_name": "AI-CRO Advisor Agent",
+      "timestamp": "2024-06-12T14:29:00Z"
+    }
+  },
+  "test_passed": true
+}
