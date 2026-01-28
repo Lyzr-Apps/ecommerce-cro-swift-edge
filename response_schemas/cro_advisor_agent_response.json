@@ -1,0 +1,204 @@
+{
+  "agent_name": "CRO Advisor Agent",
+  "agent_id": "69797ab1a5d355f8aa48876f",
+  "agent_purpose": "recommendation",
+  "description": "Returns CRO analysis with data insights, prioritized recommendations for pricing/inventory/marketing/operations/GMC optimization, actionable tasks, and conversion metrics with potential improvement estimates",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "analysis": {
+        "data_summary": "string",
+        "key_findings": [
+          "string"
+        ]
+      },
+      "recommendations": [
+        {
+          "category": "string",
+          "title": "string",
+          "description": "string",
+          "priority": "string",
+          "expected_impact": "string"
+        }
+      ],
+      "action_items": [
+        {
+          "task": "string",
+          "timeline": "string"
+        }
+      ],
+      "metrics": {
+        "current_conversion_rate": "string",
+        "potential_improvement": "string"
+      }
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "analysis": {
+        "data_summary": "No specific data provided; recommending based on e-commerce best practices and common CRO opportunities.",
+        "key_findings": [
+          "Conversion rates can be significantly improved through pricing optimization and streamlined checkout.",
+          "Inventory management often impacts customer satisfaction and repeat purchase behavior.",
+          "Effective marketing and Google Merchant Center optimization increase site traffic quality and conversion potential."
+        ]
+      },
+      "recommendations": [
+        {
+          "category": "pricing",
+          "title": "Implement A/B Testing for Key Product Price Points",
+          "description": "Run price tests on your top-selling SKUs to identify optimal price points that maximize conversions and revenue without sacrificing margin.",
+          "priority": "high",
+          "expected_impact": "5-10% increase in conversion rate"
+        },
+        {
+          "category": "operations",
+          "title": "Simplify and Speed Up Checkout Process",
+          "description": "Reduce the number of required fields, offer guest checkout, and display trust badges to minimize friction and boost completed transactions.",
+          "priority": "high",
+          "expected_impact": "7-12% increase in conversion rate"
+        },
+        {
+          "category": "inventory",
+          "title": "Prioritize Stock Availability for Best-Sellers",
+          "description": "Monitor sell-through rates and proactively replenish inventory of high-converting products to avoid stockouts and lost sales.",
+          "priority": "medium",
+          "expected_impact": "2-4% increase in conversion rate"
+        },
+        {
+          "category": "marketing",
+          "title": "A/B Test High-Traffic Landing Pages and Ad Copy",
+          "description": "Optimize landing pages and paid ad messaging for top-performing products to improve engagement and reduce bounce rates.",
+          "priority": "medium",
+          "expected_impact": "3-6% increase in conversion rate"
+        },
+        {
+          "category": "gmc",
+          "title": "Enhance Product Feed Quality and Completeness",
+          "description": "Update all product feeds with optimized titles, detailed descriptions, and complete attributes to improve shopping ad visibility and click-through rates.",
+          "priority": "medium",
+          "expected_impact": "2-5% increase in conversion rate from Google Shopping"
+        }
+      ],
+      "action_items": [
+        {
+          "task": "Set up and execute price A/B tests on at least 5 top SKUs",
+          "timeline": "immediate"
+        },
+        {
+          "task": "Audit and streamline the checkout process, focusing on removing unnecessary steps",
+          "timeline": "immediate"
+        },
+        {
+          "task": "Flag best-sellers for proactive stock management and weekly inventory check-ins",
+          "timeline": "short-term"
+        },
+        {
+          "task": "Launch at least two A/B tests on landing pages and ad copy for high-traffic products",
+          "timeline": "short-term"
+        },
+        {
+          "task": "Review Google Merchant Center feed for missing data and optimize high-priority SKUs",
+          "timeline": "immediate"
+        }
+      ],
+      "metrics": {
+        "current_conversion_rate": "Typically 1-3% for general e-commerce; use your analytics for precise figure",
+        "potential_improvement": "Up to 10-15% relative increase with combined recommendations"
+      }
+    },
+    "metadata": {
+      "agent_name": "CRO Advisor Agent",
+      "timestamp": "2024-06-13T07:46:19Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-28T03:01:03.508254",
+  "test_message_used": "Provide sample recommendations for testing",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "analysis": {
+        "data_summary": "No specific data provided; recommending based on e-commerce best practices and common CRO opportunities.",
+        "key_findings": [
+          "Conversion rates can be significantly improved through pricing optimization and streamlined checkout.",
+          "Inventory management often impacts customer satisfaction and repeat purchase behavior.",
+          "Effective marketing and Google Merchant Center optimization increase site traffic quality and conversion potential."
+        ]
+      },
+      "recommendations": [
+        {
+          "category": "pricing",
+          "title": "Implement A/B Testing for Key Product Price Points",
+          "description": "Run price tests on your top-selling SKUs to identify optimal price points that maximize conversions and revenue without sacrificing margin.",
+          "priority": "high",
+          "expected_impact": "5-10% increase in conversion rate"
+        },
+        {
+          "category": "operations",
+          "title": "Simplify and Speed Up Checkout Process",
+          "description": "Reduce the number of required fields, offer guest checkout, and display trust badges to minimize friction and boost completed transactions.",
+          "priority": "high",
+          "expected_impact": "7-12% increase in conversion rate"
+        },
+        {
+          "category": "inventory",
+          "title": "Prioritize Stock Availability for Best-Sellers",
+          "description": "Monitor sell-through rates and proactively replenish inventory of high-converting products to avoid stockouts and lost sales.",
+          "priority": "medium",
+          "expected_impact": "2-4% increase in conversion rate"
+        },
+        {
+          "category": "marketing",
+          "title": "A/B Test High-Traffic Landing Pages and Ad Copy",
+          "description": "Optimize landing pages and paid ad messaging for top-performing products to improve engagement and reduce bounce rates.",
+          "priority": "medium",
+          "expected_impact": "3-6% increase in conversion rate"
+        },
+        {
+          "category": "gmc",
+          "title": "Enhance Product Feed Quality and Completeness",
+          "description": "Update all product feeds with optimized titles, detailed descriptions, and complete attributes to improve shopping ad visibility and click-through rates.",
+          "priority": "medium",
+          "expected_impact": "2-5% increase in conversion rate from Google Shopping"
+        }
+      ],
+      "action_items": [
+        {
+          "task": "Set up and execute price A/B tests on at least 5 top SKUs",
+          "timeline": "immediate"
+        },
+        {
+          "task": "Audit and streamline the checkout process, focusing on removing unnecessary steps",
+          "timeline": "immediate"
+        },
+        {
+          "task": "Flag best-sellers for proactive stock management and weekly inventory check-ins",
+          "timeline": "short-term"
+        },
+        {
+          "task": "Launch at least two A/B tests on landing pages and ad copy for high-traffic products",
+          "timeline": "short-term"
+        },
+        {
+          "task": "Review Google Merchant Center feed for missing data and optimize high-priority SKUs",
+          "timeline": "immediate"
+        }
+      ],
+      "metrics": {
+        "current_conversion_rate": "Typically 1-3% for general e-commerce; use your analytics for precise figure",
+        "potential_improvement": "Up to 10-15% relative increase with combined recommendations"
+      }
+    },
+    "metadata": {
+      "agent_name": "CRO Advisor Agent",
+      "timestamp": "2024-06-13T07:46:19Z"
+    }
+  },
+  "test_passed": true
+}
