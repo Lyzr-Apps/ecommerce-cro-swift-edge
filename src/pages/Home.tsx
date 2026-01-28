@@ -9,6 +9,10 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import {
   Search,
   Loader2,
@@ -28,7 +32,22 @@ import {
   MessageSquare,
   Menu,
   Brain,
-  MapPin
+  MapPin,
+  Settings,
+  Bot,
+  Shield,
+  Play,
+  Pause,
+  Clock,
+  Type,
+  Tag,
+  Image,
+  AlertTriangle,
+  XCircle,
+  RotateCcw,
+  Eye,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react'
 import { callAIAgent } from '@/utils/aiAgent'
 import type { NormalizedAgentResponse } from '@/utils/aiAgent'
@@ -71,7 +90,7 @@ interface AiSearchAnalysis {
   overall_score: number
   search_queries_tested: SearchQueryResult[]
   visibility_summary: VisibilitySummary
-  agentic_shopping_readiness: 'low' | 'medium' | 'high'
+  agentic_shopping_readiness: string
   improvement_areas: string[]
 }
 
@@ -98,11 +117,64 @@ interface GooglePresenceDetection {
   google_merchant_center: GoogleMerchantCenter
 }
 
+// NEW GMC Control interfaces from test response
+interface GmcControlStatus {
+  permission_granted: boolean
+  last_sync: string
+  automation_mode: 'off' | 'review' | 'auto'
+  changes_pending_approval: number
+}
+
+interface OptimizationCategory {
+  count: number
+  status: 'pending' | 'in_progress' | 'completed'
+}
+
+interface GmcOptimizationPlan {
+  total_optimizations: number
+  by_category: {
+    product_titles: OptimizationCategory
+    missing_attributes: OptimizationCategory
+    image_optimization: OptimizationCategory
+    policy_fixes: OptimizationCategory
+    feed_errors: OptimizationCategory
+  }
+}
+
+interface AutonomousAction {
+  timestamp: string
+  action_type: string
+  target: string
+  before: string
+  after: string
+  status: 'completed' | 'failed' | 'pending_approval' | 'reverted'
+  impact_estimate: string
+  can_rollback: boolean
+}
+
+interface OptimizationQueueItem {
+  priority: number
+  optimization_type: string
+  products_affected: number
+  estimated_time: string
+  auto_execute: boolean
+  requires_approval: boolean
+  status: 'queued' | 'running' | 'paused'
+}
+
+interface PermissionRequest {
+  requesting: boolean
+  scope: string
+  actions_planned: string[]
+  estimated_improvements: string
+  user_approval_required: boolean
+}
+
 interface NextActionable {
   priority: number
   action: string
-  category: 'gmc' | 'gbp' | 'ai_search'
-  impact: 'high' | 'medium' | 'low'
+  category: string
+  impact: string
   automation_available: boolean
   estimated_time: string
   steps: string[]
@@ -113,12 +185,17 @@ interface AgentResult {
   store_info: StoreInfo
   ai_search_analysis: AiSearchAnalysis
   google_presence_detection: GooglePresenceDetection
+  gmc_control_status: GmcControlStatus
+  gmc_optimization_plan: GmcOptimizationPlan
+  autonomous_actions_taken: AutonomousAction[]
+  optimization_queue: OptimizationQueueItem[]
+  permission_request: PermissionRequest
   next_actionables: NextActionable[]
   recommendations?: string[]
   guided_workflows?: string[]
 }
 
-type View = 'onboarding' | 'dashboard' | 'ai-search' | 'google-ecosystem' | 'next-actions' | 'chat'
+type View = 'onboarding' | 'dashboard' | 'ai-search' | 'google-ecosystem' | 'next-actions' | 'gmc-optimization' | 'actions-history' | 'chat'
 
 // Helper functions
 function getScoreColor(score: number): string {
@@ -160,6 +237,782 @@ function getImpactBadgeColor(impact: string): string {
   if (impact === 'high') return 'bg-red-100 text-red-800'
   if (impact === 'medium') return 'bg-yellow-100 text-yellow-800'
   return 'bg-green-100 text-green-800'
+}
+
+function getOptimizationIcon(type: string) {
+  switch (type) {
+    case 'product_titles':
+    case 'title_optimization':
+      return <Type className="h-4 w-4" />
+    case 'missing_attributes':
+    case 'attribute_fix':
+      return <Tag className="h-4 w-4" />
+    case 'image_optimization':
+      return <Image className="h-4 w-4" />
+    case 'policy_fixes':
+      return <AlertTriangle className="h-4 w-4" />
+    case 'feed_errors':
+      return <XCircle className="h-4 w-4" />
+    default:
+      return <Settings className="h-4 w-4" />
+  }
+}
+
+// Permission Request Modal Component
+function PermissionRequestModal({
+  open,
+  permissionRequest,
+  onGrant,
+  onDismiss
+}: {
+  open: boolean
+  permissionRequest: PermissionRequest
+  onGrant: (mode: 'review' | 'auto') => void
+  onDismiss: () => void
+}) {
+  const [automationMode, setAutomationMode] = useState<'review' | 'auto'>('review')
+  const [showDetails, setShowDetails] = useState(false)
+
+  return (
+    <Dialog open={open} onOpenChange={onDismiss}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+              <Bot className="h-6 w-6 text-teal-600" />
+            </div>
+            <div>
+              <DialogTitle className="text-xl">
+                AI-CRO Wants to Optimize Your Google Merchant Center
+              </DialogTitle>
+              <Badge className="mt-1 bg-teal-100 text-teal-800">
+                <Shield className="h-3 w-3 mr-1" />
+                {permissionRequest.scope.replace(/_/g, ' ')}
+              </Badge>
+            </div>
+          </div>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* What AI-CRO Will Do */}
+          <div>
+            <h3 className="font-semibold text-slate-900 mb-3">What AI-CRO Will Do:</h3>
+            <div className="space-y-2">
+              {permissionRequest.actions_planned.map((action, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <CheckCircle className="h-5 w-5 text-teal-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-slate-700">{action}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Expected Impact */}
+          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <h3 className="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Expected Impact
+            </h3>
+            <p className="text-sm text-emerald-800">{permissionRequest.estimated_improvements}</p>
+          </div>
+
+          {/* Automation Mode Selection */}
+          <div className="border rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-3">Choose Automation Mode:</h3>
+            <RadioGroup value={automationMode} onValueChange={(val) => setAutomationMode(val as 'review' | 'auto')}>
+              <div className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                <RadioGroupItem value="review" id="review" />
+                <Label htmlFor="review" className="cursor-pointer flex-1">
+                  <div className="font-medium text-slate-900 flex items-center gap-2">
+                    <Eye className="h-4 w-4 text-yellow-500" />
+                    Review Required
+                  </div>
+                  <p className="text-xs text-slate-600 mt-1">
+                    I approve each change before it's applied
+                  </p>
+                </Label>
+              </div>
+              <div className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50 mt-2">
+                <RadioGroupItem value="auto" id="auto" />
+                <Label htmlFor="auto" className="cursor-pointer flex-1">
+                  <div className="font-medium text-slate-900 flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-teal-500" />
+                    Fully Automated
+                  </div>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Apply optimizations automatically and notify me
+                  </p>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Details Expander */}
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="w-full flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <span className="font-medium text-slate-900">View Detailed Action Plan</span>
+            {showDetails ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+          </button>
+
+          {showDetails && (
+            <div className="border rounded-lg p-4 space-y-2">
+              <p className="text-sm text-slate-700">
+                Detailed optimization steps and technical implementation will be shown here after approval.
+              </p>
+            </div>
+          )}
+
+          {/* Safety Notice */}
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+            <p className="text-xs text-slate-600">
+              <Shield className="h-3 w-3 inline mr-1" />
+              You can revoke access or rollback changes anytime
+            </p>
+          </div>
+        </div>
+
+        <DialogFooter className="flex gap-2">
+          <Button variant="ghost" onClick={onDismiss}>
+            Not Now
+          </Button>
+          <Button
+            className="bg-teal-500 hover:bg-teal-600"
+            onClick={() => onGrant(automationMode)}
+          >
+            <Shield className="h-4 w-4 mr-2" />
+            Grant Access & Start Optimizing
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// GMC Control Status Widget Component
+function GmcControlStatusWidget({
+  controlStatus,
+  onManageSettings,
+  onEnableControl
+}: {
+  controlStatus: GmcControlStatus
+  onManageSettings: () => void
+  onEnableControl: () => void
+}) {
+  return (
+    <div className="flex items-center gap-3 p-3 bg-white border rounded-lg">
+      <div className="flex items-center gap-2 flex-1">
+        <Settings className="h-5 w-5 text-slate-500" />
+        <div>
+          <div className="flex items-center gap-2">
+            {controlStatus.permission_granted ? (
+              <>
+                <Badge className="bg-teal-100 text-teal-800">
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  Control: Active
+                </Badge>
+                <Badge className={controlStatus.automation_mode === 'auto' ? 'bg-teal-500 text-white' : 'bg-yellow-100 text-yellow-800'}>
+                  {controlStatus.automation_mode === 'auto' ? (
+                    <>
+                      <Zap className="h-3 w-3 mr-1" />
+                      Auto
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="h-3 w-3 mr-1" />
+                      Review
+                    </>
+                  )}
+                </Badge>
+              </>
+            ) : (
+              <Badge className="bg-yellow-100 text-yellow-800">
+                Control: Off
+              </Badge>
+            )}
+          </div>
+          {controlStatus.permission_granted && (
+            <p className="text-xs text-slate-600 mt-1">
+              {controlStatus.changes_pending_approval > 0 && `${controlStatus.changes_pending_approval} pending approval • `}
+              Last sync: {controlStatus.last_sync || 'Never'}
+            </p>
+          )}
+        </div>
+      </div>
+      {controlStatus.permission_granted ? (
+        <Button size="sm" variant="outline" onClick={onManageSettings}>
+          Manage
+        </Button>
+      ) : (
+        <Button size="sm" className="bg-teal-500 hover:bg-teal-600" onClick={onEnableControl}>
+          Enable AI Control
+        </Button>
+      )}
+    </div>
+  )
+}
+
+// Optimization Dashboard Component
+function OptimizationDashboard({
+  controlStatus,
+  optimizationPlan,
+  onPauseResume,
+  onCategoryClick
+}: {
+  controlStatus: GmcControlStatus
+  optimizationPlan: GmcOptimizationPlan
+  onPauseResume: () => void
+  onCategoryClick: (category: string) => void
+}) {
+  const categories = [
+    { key: 'product_titles', label: 'Product Titles', icon: Type, color: 'text-blue-600' },
+    { key: 'missing_attributes', label: 'Missing Attributes', icon: Tag, color: 'text-purple-600' },
+    { key: 'image_optimization', label: 'Image Optimization', icon: Image, color: 'text-green-600' },
+    { key: 'policy_fixes', label: 'Policy Fixes', icon: AlertTriangle, color: 'text-orange-600' },
+    { key: 'feed_errors', label: 'Feed Errors', icon: XCircle, color: 'text-red-600' }
+  ]
+
+  const totalCompleted = Object.values(optimizationPlan.by_category).filter(
+    cat => cat.status === 'completed'
+  ).reduce((sum, cat) => sum + cat.count, 0)
+
+  const totalInProgress = Object.values(optimizationPlan.by_category).filter(
+    cat => cat.status === 'in_progress'
+  ).reduce((sum, cat) => sum + cat.count, 0)
+
+  const totalPending = Object.values(optimizationPlan.by_category).filter(
+    cat => cat.status === 'pending'
+  ).reduce((sum, cat) => sum + cat.count, 0)
+
+  const progressPercentage = optimizationPlan.total_optimizations > 0
+    ? (totalCompleted / optimizationPlan.total_optimizations) * 100
+    : 0
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>GMC Optimization Center</CardTitle>
+            <CardDescription>
+              {controlStatus.permission_granted ? (
+                <span className="text-teal-600">Autonomous control enabled</span>
+              ) : (
+                <span className="text-yellow-600">Awaiting permission</span>
+              )}
+            </CardDescription>
+          </div>
+          {controlStatus.permission_granted && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onPauseResume}
+              className="border-teal-500 text-teal-600"
+            >
+              {controlStatus.automation_mode === 'off' ? (
+                <>
+                  <Play className="h-4 w-4 mr-2" />
+                  Resume
+                </>
+              ) : (
+                <>
+                  <Pause className="h-4 w-4 mr-2" />
+                  Pause
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Overview Stats */}
+        <div className="grid grid-cols-4 gap-4">
+          <div className="text-center p-3 bg-slate-50 rounded-lg">
+            <p className="text-2xl font-bold text-slate-900">{optimizationPlan.total_optimizations}</p>
+            <p className="text-xs text-slate-600 mt-1">Total Planned</p>
+          </div>
+          <div className="text-center p-3 bg-emerald-50 rounded-lg">
+            <p className="text-2xl font-bold text-emerald-600">{totalCompleted}</p>
+            <p className="text-xs text-slate-600 mt-1">Completed</p>
+          </div>
+          <div className="text-center p-3 bg-blue-50 rounded-lg">
+            <p className="text-2xl font-bold text-blue-600">{totalInProgress}</p>
+            <p className="text-xs text-slate-600 mt-1">In Progress</p>
+          </div>
+          <div className="text-center p-3 bg-yellow-50 rounded-lg">
+            <p className="text-2xl font-bold text-yellow-600">{totalPending}</p>
+            <p className="text-xs text-slate-600 mt-1">Pending</p>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-slate-700">Overall Progress</span>
+            <span className="text-sm font-bold text-slate-900">{Math.round(progressPercentage)}%</span>
+          </div>
+          <Progress value={progressPercentage} className="h-3" />
+        </div>
+
+        {/* Category Breakdown */}
+        <div className="space-y-2">
+          <h4 className="font-semibold text-slate-900 mb-3">Optimization Categories</h4>
+          {categories.map(({ key, label, icon: Icon, color }) => {
+            const category = optimizationPlan.by_category[key as keyof typeof optimizationPlan.by_category]
+            return (
+              <button
+                key={key}
+                onClick={() => onCategoryClick(key)}
+                className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Icon className={`h-5 w-5 ${color}`} />
+                  <span className="font-medium text-slate-900">{label}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge
+                    className={
+                      category.status === 'completed'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : category.status === 'in_progress'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }
+                  >
+                    {category.count} {category.status.replace(/_/g, ' ')}
+                  </Badge>
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Optimization Queue Component
+function OptimizationQueue({ queue }: { queue: OptimizationQueueItem[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Optimization Queue</CardTitle>
+        <CardDescription>{queue.length} items in queue</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {queue.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">
+            <Clock className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+            <p>No optimizations queued</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {queue
+              .sort((a, b) => a.priority - b.priority)
+              .map((item, idx) => (
+                <div key={idx} className="border rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start gap-3 flex-1">
+                      <div className="w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        #{item.priority}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          {getOptimizationIcon(item.optimization_type)}
+                          <h4 className="font-semibold text-sm">
+                            {item.optimization_type.replace(/_/g, ' ')}
+                          </h4>
+                        </div>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <Badge variant="outline" className="text-xs">
+                            {item.products_affected} products
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {item.estimated_time}
+                          </Badge>
+                          {item.auto_execute && (
+                            <Badge className="bg-teal-500 text-white text-xs">
+                              <Zap className="h-3 w-3 mr-1" />
+                              Auto-execute
+                            </Badge>
+                          )}
+                          <Badge
+                            className={
+                              item.status === 'running'
+                                ? 'bg-blue-100 text-blue-800 text-xs'
+                                : item.status === 'paused'
+                                ? 'bg-yellow-100 text-yellow-800 text-xs'
+                                : 'bg-slate-100 text-slate-800 text-xs'
+                            }
+                          >
+                            {item.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {item.requires_approval && (
+                        <Button size="sm" className="bg-teal-500 hover:bg-teal-600">
+                          Review & Approve
+                        </Button>
+                      )}
+                      {item.status === 'running' && (
+                        <Button size="sm" variant="outline">
+                          <Pause className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  {item.status === 'running' && (
+                    <div className="flex items-center gap-2 text-xs text-slate-600">
+                      <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                      <span>Executing optimization...</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// Actions History Component
+function ActionsHistory({ actions }: { actions: AutonomousAction[] }) {
+  const [expandedActions, setExpandedActions] = useState<number[]>([])
+  const [filterStatus, setFilterStatus] = useState<string>('all')
+
+  const toggleExpand = (idx: number) => {
+    setExpandedActions(prev =>
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+    )
+  }
+
+  const filteredActions = filterStatus === 'all'
+    ? actions
+    : actions.filter(action => action.status === filterStatus)
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Actions History</CardTitle>
+            <CardDescription>{actions.length} autonomous actions recorded</CardDescription>
+          </div>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="border rounded-lg px-3 py-2 text-sm"
+          >
+            <option value="all">All Actions</option>
+            <option value="completed">Completed</option>
+            <option value="failed">Failed</option>
+            <option value="pending_approval">Pending Approval</option>
+            <option value="reverted">Reverted</option>
+          </select>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {filteredActions.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">
+            <Clock className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+            <p>No actions recorded yet</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {filteredActions.map((action, idx) => (
+              <div key={idx} className="border rounded-lg">
+                <button
+                  onClick={() => toggleExpand(idx)}
+                  className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+                >
+                  <div className="flex items-start gap-3 flex-1 text-left">
+                    {getOptimizationIcon(action.action_type)}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm">{action.action_type.replace(/_/g, ' ')}</span>
+                        <Badge
+                          className={
+                            action.status === 'completed'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : action.status === 'failed'
+                              ? 'bg-red-100 text-red-800'
+                              : action.status === 'reverted'
+                              ? 'bg-slate-100 text-slate-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }
+                        >
+                          {action.status.replace(/_/g, ' ')}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-600">
+                        <Clock className="h-3 w-3" />
+                        <span>{action.timestamp}</span>
+                        <span className="mx-2">•</span>
+                        <span>Target: {action.target}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {expandedActions.includes(idx) ? (
+                    <ChevronUp className="h-5 w-5 text-slate-400" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-slate-400" />
+                  )}
+                </button>
+
+                {expandedActions.includes(idx) && (
+                  <div className="border-t p-4 space-y-3 bg-slate-50">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs font-semibold text-slate-700 mb-1">Before:</p>
+                        <div className="bg-red-50 border border-red-200 rounded p-2 text-xs text-slate-900">
+                          {action.before}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-slate-700 mb-1">After:</p>
+                        <div className="bg-emerald-50 border border-emerald-200 rounded p-2 text-xs text-slate-900">
+                          {action.after}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded p-3">
+                      <p className="text-xs font-semibold text-blue-900 mb-1">Impact Estimate:</p>
+                      <p className="text-xs text-blue-800">{action.impact_estimate}</p>
+                    </div>
+
+                    {action.can_rollback && action.status === 'completed' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-red-500 text-red-600 hover:bg-red-50"
+                      >
+                        <RotateCcw className="h-4 w-4 mr-2" />
+                        Rollback This Change
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// Automation Settings Modal Component
+function AutomationSettingsModal({
+  open,
+  controlStatus,
+  onClose,
+  onSave,
+  onRevoke
+}: {
+  open: boolean
+  controlStatus: GmcControlStatus
+  onClose: () => void
+  onSave: (settings: any) => void
+  onRevoke: () => void
+}) {
+  const [automationMode, setAutomationMode] = useState(controlStatus.automation_mode)
+  const [categories, setCategories] = useState({
+    product_titles: true,
+    missing_attributes: true,
+    image_optimization: true,
+    policy_fixes: true,
+    feed_errors: true
+  })
+
+  const handleSave = () => {
+    onSave({ automation_mode: automationMode, categories })
+    onClose()
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Automation Settings</DialogTitle>
+          <DialogDescription>Configure GMC optimization automation preferences</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Automation Mode */}
+          <div>
+            <h3 className="font-semibold text-slate-900 mb-3">Automation Mode</h3>
+            <RadioGroup value={automationMode} onValueChange={(val) => setAutomationMode(val as any)}>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <RadioGroupItem value="off" id="mode-off" />
+                  <Label htmlFor="mode-off" className="flex-1 cursor-pointer">
+                    <div className="font-medium">Off - No automatic optimizations</div>
+                  </Label>
+                </div>
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <RadioGroupItem value="review" id="mode-review" />
+                  <Label htmlFor="mode-review" className="flex-1 cursor-pointer">
+                    <div className="font-medium">Review Required - Approve each change</div>
+                  </Label>
+                </div>
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <RadioGroupItem value="auto" id="mode-auto" />
+                  <Label htmlFor="mode-auto" className="flex-1 cursor-pointer">
+                    <div className="font-medium">Fully Automated - Auto-apply all optimizations</div>
+                  </Label>
+                </div>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Optimization Categories */}
+          <div>
+            <h3 className="font-semibold text-slate-900 mb-3">Optimization Categories</h3>
+            <div className="space-y-2">
+              {Object.keys(categories).map((key) => (
+                <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
+                  <Label htmlFor={key} className="cursor-pointer">
+                    {key.replace(/_/g, ' ')}
+                  </Label>
+                  <Switch
+                    id={key}
+                    checked={categories[key as keyof typeof categories]}
+                    onCheckedChange={(checked) =>
+                      setCategories(prev => ({ ...prev, [key]: checked }))
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Safety Controls */}
+          <div className="border-t pt-6">
+            <h3 className="font-semibold text-slate-900 mb-3">Safety Controls</h3>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="w-full justify-start border-red-500 text-red-600 hover:bg-red-50"
+                onClick={onRevoke}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Revoke GMC Access
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button className="bg-teal-500 hover:bg-teal-600" onClick={handleSave}>
+            Save Settings
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// Updated GMC Card with Control Status
+function UpdatedGmcCard({
+  gmc,
+  controlStatus,
+  optimizationPlan,
+  onEnableControl,
+  onViewProgress,
+  onManageSettings
+}: {
+  gmc: GoogleMerchantCenter
+  controlStatus: GmcControlStatus
+  optimizationPlan: GmcOptimizationPlan
+  onEnableControl: () => void
+  onViewProgress: () => void
+  onManageSettings: () => void
+}) {
+  const completedToday = 0 // Would be calculated from actions
+  const runningCount = Object.values(optimizationPlan.by_category).filter(
+    cat => cat.status === 'in_progress'
+  ).length
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-teal-500" />
+            Google Merchant Center
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            {controlStatus.permission_granted ? (
+              <>
+                <Badge className="bg-teal-100 text-teal-800">
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  AI Control: Active
+                </Badge>
+                <Badge className={controlStatus.automation_mode === 'auto' ? 'bg-teal-500 text-white' : 'bg-yellow-100 text-yellow-800'}>
+                  {controlStatus.automation_mode === 'auto' ? 'Auto' : 'Review'}
+                </Badge>
+              </>
+            ) : (
+              <Badge className="bg-yellow-100 text-yellow-800">
+                AI Control: Disabled
+              </Badge>
+            )}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {controlStatus.permission_granted ? (
+          <>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-blue-50 rounded p-3 text-center">
+                <p className="text-2xl font-bold text-blue-600">{runningCount}</p>
+                <p className="text-xs text-slate-600 mt-1">Running</p>
+              </div>
+              <div className="bg-emerald-50 rounded p-3 text-center">
+                <p className="text-2xl font-bold text-emerald-600">{completedToday}</p>
+                <p className="text-xs text-slate-600 mt-1">Completed Today</p>
+              </div>
+              <div className="bg-yellow-50 rounded p-3 text-center">
+                <p className="text-2xl font-bold text-yellow-600">{controlStatus.changes_pending_approval}</p>
+                <p className="text-xs text-slate-600 mt-1">Pending Review</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1 bg-teal-500 hover:bg-teal-600" onClick={onViewProgress}>
+                View Progress
+              </Button>
+              <Button variant="outline" onClick={onManageSettings}>
+                Manage
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            {optimizationPlan.total_optimizations > 0 && (
+              <div className="bg-teal-50 border border-teal-200 rounded-lg p-3">
+                <p className="text-sm font-medium text-teal-900">
+                  {optimizationPlan.total_optimizations} optimizations available
+                </p>
+              </div>
+            )}
+            <Button className="w-full bg-teal-500 hover:bg-teal-600" onClick={onEnableControl}>
+              <Zap className="h-4 w-4 mr-2" />
+              Enable AI Optimization
+            </Button>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  )
 }
 
 // Sub-components defined outside main component
@@ -283,20 +1136,24 @@ function StoreInfoCard({ storeInfo, onReanalyze }: { storeInfo: StoreInfo; onRea
               <Store className="h-6 w-6 text-teal-600" />
             </div>
             <div>
-              <CardTitle className="text-xl">{storeInfo.business_name}</CardTitle>
+              <CardTitle className="text-xl">{storeInfo.business_name || 'Your Store'}</CardTitle>
               <CardDescription className="flex items-center gap-2 mt-1">
-                <a
-                  href={storeInfo.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-teal-600 hover:underline flex items-center gap-1"
-                >
-                  {storeInfo.website}
-                  <ExternalLink className="h-3 w-3" />
-                </a>
+                {storeInfo.website && (
+                  <a
+                    href={storeInfo.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal-600 hover:underline flex items-center gap-1"
+                  >
+                    {storeInfo.website}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
               </CardDescription>
               <div className="flex items-center gap-2 mt-2">
-                <Badge variant="outline">{storeInfo.detected_category}</Badge>
+                {storeInfo.detected_category && (
+                  <Badge variant="outline">{storeInfo.detected_category}</Badge>
+                )}
                 {storeInfo.verified && (
                   <Badge className="bg-emerald-100 text-emerald-800">
                     <CheckCircle className="h-3 w-3 mr-1" />
@@ -399,6 +1256,17 @@ function MetricsGrid({ result }: { result: AgentResult }) {
 }
 
 function AiSearchQueryTable({ queries }: { queries: SearchQueryResult[] }) {
+  if (!queries || queries.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>AI-Search Query Results</CardTitle>
+          <CardDescription>No query data available</CardDescription>
+        </CardHeader>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -755,6 +1623,10 @@ export default function Home() {
   const [analysisResult, setAnalysisResult] = useState<AgentResult | null>(null)
   const [onboardingComplete, setOnboardingComplete] = useState(false)
 
+  // GMC Control state
+  const [showPermissionModal, setShowPermissionModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+
   // Check if user has completed onboarding
   useEffect(() => {
     const completed = localStorage.getItem('ai_cro_onboarding_complete')
@@ -763,6 +1635,13 @@ export default function Home() {
       setCurrentView('dashboard')
     }
   }, [])
+
+  // Check for permission request after analysis
+  useEffect(() => {
+    if (analysisResult?.permission_request?.requesting) {
+      setShowPermissionModal(true)
+    }
+  }, [analysisResult])
 
   const handleAnalyzeStore = async (storeUrl: string) => {
     setLoading(true)
@@ -792,6 +1671,55 @@ export default function Home() {
     }
   }
 
+  const handleGrantPermission = async (mode: 'review' | 'auto') => {
+    // Update local state
+    if (analysisResult) {
+      setAnalysisResult({
+        ...analysisResult,
+        gmc_control_status: {
+          ...analysisResult.gmc_control_status,
+          permission_granted: true,
+          automation_mode: mode,
+          last_sync: new Date().toISOString()
+        },
+        permission_request: {
+          ...analysisResult.permission_request,
+          requesting: false
+        }
+      })
+    }
+    setShowPermissionModal(false)
+
+    // In real implementation, would call agent to grant permission
+    // const result = await callAIAgent(`Grant GMC control with ${mode} mode`, AGENT_ID)
+  }
+
+  const handleRevokePermission = () => {
+    if (analysisResult) {
+      setAnalysisResult({
+        ...analysisResult,
+        gmc_control_status: {
+          ...analysisResult.gmc_control_status,
+          permission_granted: false,
+          automation_mode: 'off'
+        }
+      })
+    }
+    setShowSettingsModal(false)
+  }
+
+  const handlePauseResume = () => {
+    if (analysisResult) {
+      setAnalysisResult({
+        ...analysisResult,
+        gmc_control_status: {
+          ...analysisResult.gmc_control_status,
+          automation_mode: analysisResult.gmc_control_status.automation_mode === 'off' ? 'review' : 'off'
+        }
+      })
+    }
+  }
+
   // Show onboarding if not complete
   if (!onboardingComplete) {
     return <OnboardingScreen onAnalyze={handleAnalyzeStore} loading={loading} />
@@ -799,6 +1727,37 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-slate-50">
+      {/* Permission Request Modal */}
+      {analysisResult?.permission_request && (
+        <PermissionRequestModal
+          open={showPermissionModal}
+          permissionRequest={analysisResult.permission_request}
+          onGrant={handleGrantPermission}
+          onDismiss={() => setShowPermissionModal(false)}
+        />
+      )}
+
+      {/* Automation Settings Modal */}
+      {analysisResult?.gmc_control_status && (
+        <AutomationSettingsModal
+          open={showSettingsModal}
+          controlStatus={analysisResult.gmc_control_status}
+          onClose={() => setShowSettingsModal(false)}
+          onSave={(settings) => {
+            if (analysisResult) {
+              setAnalysisResult({
+                ...analysisResult,
+                gmc_control_status: {
+                  ...analysisResult.gmc_control_status,
+                  automation_mode: settings.automation_mode
+                }
+              })
+            }
+          }}
+          onRevoke={handleRevokePermission}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`${
@@ -843,6 +1802,28 @@ export default function Home() {
             <span>Google Ecosystem</span>
           </button>
           <button
+            onClick={() => { setCurrentView('gmc-optimization'); setChatOpen(false) }}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              currentView === 'gmc-optimization'
+                ? 'bg-[#00d4aa] text-white'
+                : 'text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            <Settings className="h-5 w-5" />
+            <span>GMC Optimization</span>
+          </button>
+          <button
+            onClick={() => { setCurrentView('actions-history'); setChatOpen(false) }}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              currentView === 'actions-history'
+                ? 'bg-[#00d4aa] text-white'
+                : 'text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            <Clock className="h-5 w-5" />
+            <span>Actions History</span>
+          </button>
+          <button
             onClick={() => { setCurrentView('next-actions'); setChatOpen(false) }}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               currentView === 'next-actions'
@@ -872,18 +1853,31 @@ export default function Home() {
                   ? 'AI-Search Analysis'
                   : currentView === 'google-ecosystem'
                   ? 'Google Ecosystem'
+                  : currentView === 'gmc-optimization'
+                  ? 'GMC Optimization Center'
+                  : currentView === 'actions-history'
+                  ? 'Actions History'
                   : currentView === 'next-actions'
                   ? 'Next Actions'
                   : 'Chat'}
               </h2>
             </div>
-            <Button
-              onClick={() => setChatOpen(true)}
-              className="bg-[#00d4aa] hover:bg-teal-600"
-            >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Ask AI
-            </Button>
+            <div className="flex items-center gap-3">
+              {analysisResult?.gmc_control_status && (
+                <GmcControlStatusWidget
+                  controlStatus={analysisResult.gmc_control_status}
+                  onManageSettings={() => setShowSettingsModal(true)}
+                  onEnableControl={() => setShowPermissionModal(true)}
+                />
+              )}
+              <Button
+                onClick={() => setChatOpen(true)}
+                className="bg-[#00d4aa] hover:bg-teal-600"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Ask AI
+              </Button>
+            </div>
           </div>
         </header>
 
@@ -893,9 +1887,41 @@ export default function Home() {
             <div className="space-y-6">
               <StoreInfoCard storeInfo={analysisResult.store_info} onReanalyze={handleReanalyze} />
               <MetricsGrid result={analysisResult} />
+              {analysisResult.gmc_control_status && analysisResult.gmc_optimization_plan && (
+                <UpdatedGmcCard
+                  gmc={analysisResult.google_presence_detection.google_merchant_center}
+                  controlStatus={analysisResult.gmc_control_status}
+                  optimizationPlan={analysisResult.gmc_optimization_plan}
+                  onEnableControl={() => setShowPermissionModal(true)}
+                  onViewProgress={() => setCurrentView('gmc-optimization')}
+                  onManageSettings={() => setShowSettingsModal(true)}
+                />
+              )}
               <AiSearchQueryTable queries={analysisResult.ai_search_analysis.search_queries_tested} />
               <GooglePresenceCards googlePresence={analysisResult.google_presence_detection} />
               <NextActionablesSection actionables={analysisResult.next_actionables} />
+            </div>
+          )}
+
+          {analysisResult && currentView === 'gmc-optimization' && (
+            <div className="space-y-6">
+              {analysisResult.gmc_control_status && analysisResult.gmc_optimization_plan && (
+                <>
+                  <OptimizationDashboard
+                    controlStatus={analysisResult.gmc_control_status}
+                    optimizationPlan={analysisResult.gmc_optimization_plan}
+                    onPauseResume={handlePauseResume}
+                    onCategoryClick={(category) => console.log('Category clicked:', category)}
+                  />
+                  <OptimizationQueue queue={analysisResult.optimization_queue} />
+                </>
+              )}
+            </div>
+          )}
+
+          {analysisResult && currentView === 'actions-history' && (
+            <div className="space-y-6">
+              <ActionsHistory actions={analysisResult.autonomous_actions_taken} />
             </div>
           )}
 
@@ -1007,20 +2033,22 @@ export default function Home() {
 
               <AiSearchQueryTable queries={analysisResult.ai_search_analysis.search_queries_tested} />
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Improvement Areas</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {analysisResult.ai_search_analysis.improvement_areas.map((area, idx) => (
-                      <Badge key={idx} className="bg-blue-100 text-blue-800 text-sm py-2 px-3">
-                        {area.replace(/_/g, ' ')}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              {analysisResult.ai_search_analysis.improvement_areas.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Improvement Areas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {analysisResult.ai_search_analysis.improvement_areas.map((area, idx) => (
+                        <Badge key={idx} className="bg-blue-100 text-blue-800 text-sm py-2 px-3">
+                          {area.replace(/_/g, ' ')}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
 
@@ -1118,13 +2146,16 @@ export default function Home() {
                   Re-analyze my store
                 </button>
                 <button className="w-full text-left text-sm p-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">
-                  Show AI-search optimization steps
+                  Show me what you've optimized
                 </button>
                 <button className="w-full text-left text-sm p-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">
-                  Help me set up Google Merchant Center
+                  Approve pending changes
                 </button>
                 <button className="w-full text-left text-sm p-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">
-                  How to improve agentic shopping readiness
+                  Run product title optimization
+                </button>
+                <button className="w-full text-left text-sm p-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">
+                  Fix all feed errors automatically
                 </button>
               </div>
             </div>

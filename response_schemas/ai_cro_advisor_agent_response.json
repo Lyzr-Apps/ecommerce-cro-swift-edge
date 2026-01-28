@@ -2,7 +2,7 @@
   "agent_name": "AI-CRO Advisor Agent",
   "agent_id": "69797ab1a5d355f8aa48876f",
   "agent_purpose": "analyzer",
-  "description": "Onboarding-optimized analyzer that processes store URL/name input, performs AI-search visibility testing across platforms, detects Google Business Profile and Merchant Center presence, and delivers prioritized actionable workflows",
+  "description": "Onboarding-optimized analyzer that processes store URL/name input, performs AI-search visibility testing across platforms, detects Google Business Profile and Merchant Center presence, and delivers prioritized actionable workflows WITH AUTONOMOUS GMC CONTROL - can request permission to directly optimize product feeds, fix errors, and execute GMC improvements",
   "response_schema": {
     "status": "string",
     "result": {
@@ -15,31 +15,7 @@
       "ai_search_analysis": {
         "overall_score": "number",
         "search_queries_tested": [
-          {
-            "query": "string",
-            "platforms": {
-              "chatgpt": {
-                "found": "boolean",
-                "position": "string",
-                "context": "string"
-              },
-              "perplexity": {
-                "found": "boolean",
-                "position": "string",
-                "context": "string"
-              },
-              "gemini": {
-                "found": "boolean",
-                "position": "string",
-                "context": "string"
-              },
-              "claude": {
-                "found": "boolean",
-                "position": "string",
-                "context": "string"
-              }
-            }
-          }
+          "any"
         ],
         "visibility_summary": {
           "chatgpt_score": "number",
@@ -49,7 +25,7 @@
         },
         "agentic_shopping_readiness": "string",
         "improvement_areas": [
-          "string"
+          "any"
         ]
       },
       "google_presence_detection": {
@@ -58,10 +34,10 @@
           "status": "string",
           "completeness_score": "number",
           "missing_fields": [
-            "string"
+            "any"
           ],
           "issues": [
-            "string"
+            "any"
           ]
         },
         "google_merchant_center": {
@@ -72,9 +48,55 @@
           "errors_count": "number",
           "warnings_count": "number",
           "critical_issues": [
-            "string"
+            "any"
           ]
         }
+      },
+      "gmc_control_status": {
+        "permission_granted": "boolean",
+        "last_sync": "string",
+        "automation_mode": "string",
+        "changes_pending_approval": "number"
+      },
+      "gmc_optimization_plan": {
+        "total_optimizations": "number",
+        "by_category": {
+          "product_titles": {
+            "count": "number",
+            "status": "string"
+          },
+          "missing_attributes": {
+            "count": "number",
+            "status": "string"
+          },
+          "image_optimization": {
+            "count": "number",
+            "status": "string"
+          },
+          "policy_fixes": {
+            "count": "number",
+            "status": "string"
+          },
+          "feed_errors": {
+            "count": "number",
+            "status": "string"
+          }
+        }
+      },
+      "autonomous_actions_taken": [
+        "any"
+      ],
+      "optimization_queue": [
+        "any"
+      ],
+      "permission_request": {
+        "requesting": "boolean",
+        "scope": "string",
+        "actions_planned": [
+          "string"
+        ],
+        "estimated_improvements": "string",
+        "user_approval_required": "boolean"
       },
       "next_actionables": [
         {
@@ -106,555 +128,233 @@
     "status": "success",
     "result": {
       "store_info": {
-        "website": "https://www.example-coffee-shop.com",
-        "business_name": "Example Coffee Shop",
-        "detected_category": "Coffee & Tea Retailer",
-        "verified": true
+        "website": "",
+        "business_name": "",
+        "detected_category": "",
+        "verified": false
       },
       "ai_search_analysis": {
-        "overall_score": 32,
-        "search_queries_tested": [
-          {
-            "query": "best coffee beans online",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "example coffee shop reviews",
-            "platforms": {
-              "chatgpt": {
-                "found": true,
-                "position": "7",
-                "context": "Listed among local coffee shops, moderate review volume"
-              },
-              "perplexity": {
-                "found": true,
-                "position": "8",
-                "context": "Mentioned as an option for specialty coffee, limited review aggregation"
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "buy specialty coffee online",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "best local coffee shops near me",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": true,
-                "position": "10",
-                "context": "Listed among several local coffee shop options"
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "example coffee shop vs competitors",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          }
-        ],
+        "overall_score": 0,
+        "search_queries_tested": [],
         "visibility_summary": {
-          "chatgpt_score": 32,
-          "perplexity_score": 30,
-          "gemini_score": 25,
+          "chatgpt_score": 0,
+          "perplexity_score": 0,
+          "gemini_score": 0,
           "claude_score": 0
         },
-        "agentic_shopping_readiness": "low",
-        "improvement_areas": [
-          "structured_data",
-          "entity_recognition",
-          "content_optimization"
-        ]
+        "agentic_shopping_readiness": "Insufficient data to determine readiness.",
+        "improvement_areas": []
       },
       "google_presence_detection": {
         "google_business_profile": {
-          "exists": true,
-          "status": "unverified",
-          "completeness_score": 34,
-          "missing_fields": [
-            "hours",
-            "photos",
-            "business description",
-            "attributes",
-            "products/services"
-          ],
-          "issues": [
-            "Profile unverified",
-            "No recent posts",
-            "Only basic information present"
-          ]
+          "exists": false,
+          "status": "not_found",
+          "completeness_score": 0,
+          "missing_fields": [],
+          "issues": []
         },
         "google_merchant_center": {
-          "exists": false,
-          "account_status": "not_found",
-          "feed_health": "critical",
+          "exists": true,
+          "account_status": "active",
+          "feed_health": "pending_analysis",
           "active_products": 0,
           "errors_count": 0,
           "warnings_count": 0,
-          "critical_issues": [
-            "No GMC account found; unable to list products on Google Shopping"
-          ]
+          "critical_issues": []
         }
+      },
+      "gmc_control_status": {
+        "permission_granted": false,
+        "last_sync": "",
+        "automation_mode": "off",
+        "changes_pending_approval": 0
+      },
+      "gmc_optimization_plan": {
+        "total_optimizations": 0,
+        "by_category": {
+          "product_titles": {
+            "count": 0,
+            "status": "pending"
+          },
+          "missing_attributes": {
+            "count": 0,
+            "status": "pending"
+          },
+          "image_optimization": {
+            "count": 0,
+            "status": "pending"
+          },
+          "policy_fixes": {
+            "count": 0,
+            "status": "pending"
+          },
+          "feed_errors": {
+            "count": 0,
+            "status": "pending"
+          }
+        }
+      },
+      "autonomous_actions_taken": [],
+      "optimization_queue": [],
+      "permission_request": {
+        "requesting": true,
+        "scope": "optimize_products",
+        "actions_planned": [
+          "Analyze your GMC product feed for errors, missing attributes, and optimization opportunities",
+          "Optimize product titles for clarity and search ranking",
+          "Complete missing product attributes (GTIN, brand, etc.)",
+          "Correct product images and add missing images",
+          "Detect and fix policy violations",
+          "Resolve feed errors and warnings"
+        ],
+        "estimated_improvements": "Typically results in improved product visibility, higher ad approval rates, and better conversion potential.",
+        "user_approval_required": true
       },
       "next_actionables": [
         {
           "priority": 1,
-          "action": "Set up Google Merchant Center",
-          "category": "gmc",
-          "impact": "high",
+          "action": "Grant permission for autonomous GMC optimization",
+          "category": "GMC feed optimization",
+          "impact": "Unlocks automated product enhancements and fixes for higher performance and compliance",
           "automation_available": true,
-          "estimated_time": "30-45 minutes",
+          "estimated_time": "Immediate upon approval",
           "steps": [
-            "Visit Google Merchant Center and start a new account",
-            "Verify business ownership with Google",
-            "Connect website for feed sync",
-            "Add business details and tax/shipping settings"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 2,
-          "action": "Complete Google Business Profile",
-          "category": "gbp",
-          "impact": "high",
-          "automation_available": true,
-          "estimated_time": "20-30 minutes",
-          "steps": [
-            "Add business hours",
-            "Upload at least 10 recent business photos",
-            "Write a detailed business description",
-            "Select relevant categories and attributes",
-            "List products/services",
-            "Publish regular weekly posts"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 3,
-          "action": "Verify Google Business Profile",
-          "category": "gbp",
-          "impact": "high",
-          "automation_available": false,
-          "estimated_time": "10-15 minutes (plus Google's verification time)",
-          "steps": [
-            "Login to Google Business Profile dashboard",
-            "Request verification (via mail, phone, or email)",
-            "Follow up and complete verification process"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 4,
-          "action": "Implement schema.org markup",
-          "category": "ai_search",
-          "impact": "medium",
-          "automation_available": true,
-          "estimated_time": "20-30 minutes",
-          "steps": [
-            "Add schema.org Product, Organization, and Review markup to your site",
-            "Use JSON-LD format for easier AI parsing",
-            "Test markup in Google's Rich Results Test"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 5,
-          "action": "Optimize website content for AI and search engines",
-          "category": "ai_search",
-          "impact": "medium",
-          "automation_available": true,
-          "estimated_time": "30-45 minutes",
-          "steps": [
-            "Add detailed product descriptions highlighting specialty/unique features",
-            "Increase NAP (Name, Address, Phone) consistency across site and directories",
-            "Create FAQ and comparison pages for better AI understanding"
+            "Approve GMC optimization request",
+            "Allow agent to scan and optimize account"
           ],
           "can_start_now": true
         }
       ],
       "recommendations": [
-        "Start by setting up your Google Merchant Center account to enable product listings in Google Shopping and increase purchase intent traffic.",
-        "Fully complete and verify your Google Business Profile to appear in local search and Maps, and build foundational entity recognition for AI algorithms.",
-        "Implement structured data (schema.org markup) for all products and organizational info\u2014this is critical for AI discovery.",
-        "Upgrade your website's product and brand content to directly answer common queries and comparison requests AI platforms resolve.",
-        "Regularly publish GBP posts and add new photos to signal business activity and improve ranking."
+        "Grant permission so I can analyze and optimize your Google Merchant Center product feed.",
+        "After approval, I will provide a detailed action plan and execute improvements automatically."
       ],
       "guided_workflows": [
-        "GMC Setup & Sync: Automate account creation, website connection, and feed upload for all coffee products.",
-        "GBP Automation: Auto-fill all business fields, upload stock photos, and schedule weekly posts from your site.",
-        "Schema Markup Wizard: Generate and insert schema.org Product, Organization, and Review markups based on your current catalog.",
-        "Content Optimizer: Use AI to rewrite product/category content focused on AI-search discoverability."
+        "Grant GMC Access & Run First Feed Optimization",
+        "Review Optimization Report & Fine-tune Automation Mode"
       ]
     },
     "metadata": {
       "agent_name": "AI-CRO Advisor Agent",
-      "timestamp": "2024-06-20T16:24:55Z"
+      "timestamp": "2024-06-17T16:19:41Z"
     }
   },
   "is_actual_tested": true,
-  "test_timestamp": "2026-01-28T03:43:13.486168",
+  "test_timestamp": "2026-01-28T03:53:57.682880",
   "test_message_used": "Analyze this sample data for testing",
   "actual_test_response": {
     "status": "success",
     "result": {
       "store_info": {
-        "website": "https://www.example-coffee-shop.com",
-        "business_name": "Example Coffee Shop",
-        "detected_category": "Coffee & Tea Retailer",
-        "verified": true
+        "website": "",
+        "business_name": "",
+        "detected_category": "",
+        "verified": false
       },
       "ai_search_analysis": {
-        "overall_score": 32,
-        "search_queries_tested": [
-          {
-            "query": "best coffee beans online",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "example coffee shop reviews",
-            "platforms": {
-              "chatgpt": {
-                "found": true,
-                "position": "7",
-                "context": "Listed among local coffee shops, moderate review volume"
-              },
-              "perplexity": {
-                "found": true,
-                "position": "8",
-                "context": "Mentioned as an option for specialty coffee, limited review aggregation"
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "buy specialty coffee online",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "best local coffee shops near me",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": true,
-                "position": "10",
-                "context": "Listed among several local coffee shop options"
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          },
-          {
-            "query": "example coffee shop vs competitors",
-            "platforms": {
-              "chatgpt": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "perplexity": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "gemini": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              },
-              "claude": {
-                "found": false,
-                "position": "not_found",
-                "context": ""
-              }
-            }
-          }
-        ],
+        "overall_score": 0,
+        "search_queries_tested": [],
         "visibility_summary": {
-          "chatgpt_score": 32,
-          "perplexity_score": 30,
-          "gemini_score": 25,
+          "chatgpt_score": 0,
+          "perplexity_score": 0,
+          "gemini_score": 0,
           "claude_score": 0
         },
-        "agentic_shopping_readiness": "low",
-        "improvement_areas": [
-          "structured_data",
-          "entity_recognition",
-          "content_optimization"
-        ]
+        "agentic_shopping_readiness": "Insufficient data to determine readiness.",
+        "improvement_areas": []
       },
       "google_presence_detection": {
         "google_business_profile": {
-          "exists": true,
-          "status": "unverified",
-          "completeness_score": 34,
-          "missing_fields": [
-            "hours",
-            "photos",
-            "business description",
-            "attributes",
-            "products/services"
-          ],
-          "issues": [
-            "Profile unverified",
-            "No recent posts",
-            "Only basic information present"
-          ]
+          "exists": false,
+          "status": "not_found",
+          "completeness_score": 0,
+          "missing_fields": [],
+          "issues": []
         },
         "google_merchant_center": {
-          "exists": false,
-          "account_status": "not_found",
-          "feed_health": "critical",
+          "exists": true,
+          "account_status": "active",
+          "feed_health": "pending_analysis",
           "active_products": 0,
           "errors_count": 0,
           "warnings_count": 0,
-          "critical_issues": [
-            "No GMC account found; unable to list products on Google Shopping"
-          ]
+          "critical_issues": []
         }
+      },
+      "gmc_control_status": {
+        "permission_granted": false,
+        "last_sync": "",
+        "automation_mode": "off",
+        "changes_pending_approval": 0
+      },
+      "gmc_optimization_plan": {
+        "total_optimizations": 0,
+        "by_category": {
+          "product_titles": {
+            "count": 0,
+            "status": "pending"
+          },
+          "missing_attributes": {
+            "count": 0,
+            "status": "pending"
+          },
+          "image_optimization": {
+            "count": 0,
+            "status": "pending"
+          },
+          "policy_fixes": {
+            "count": 0,
+            "status": "pending"
+          },
+          "feed_errors": {
+            "count": 0,
+            "status": "pending"
+          }
+        }
+      },
+      "autonomous_actions_taken": [],
+      "optimization_queue": [],
+      "permission_request": {
+        "requesting": true,
+        "scope": "optimize_products",
+        "actions_planned": [
+          "Analyze your GMC product feed for errors, missing attributes, and optimization opportunities",
+          "Optimize product titles for clarity and search ranking",
+          "Complete missing product attributes (GTIN, brand, etc.)",
+          "Correct product images and add missing images",
+          "Detect and fix policy violations",
+          "Resolve feed errors and warnings"
+        ],
+        "estimated_improvements": "Typically results in improved product visibility, higher ad approval rates, and better conversion potential.",
+        "user_approval_required": true
       },
       "next_actionables": [
         {
           "priority": 1,
-          "action": "Set up Google Merchant Center",
-          "category": "gmc",
-          "impact": "high",
+          "action": "Grant permission for autonomous GMC optimization",
+          "category": "GMC feed optimization",
+          "impact": "Unlocks automated product enhancements and fixes for higher performance and compliance",
           "automation_available": true,
-          "estimated_time": "30-45 minutes",
+          "estimated_time": "Immediate upon approval",
           "steps": [
-            "Visit Google Merchant Center and start a new account",
-            "Verify business ownership with Google",
-            "Connect website for feed sync",
-            "Add business details and tax/shipping settings"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 2,
-          "action": "Complete Google Business Profile",
-          "category": "gbp",
-          "impact": "high",
-          "automation_available": true,
-          "estimated_time": "20-30 minutes",
-          "steps": [
-            "Add business hours",
-            "Upload at least 10 recent business photos",
-            "Write a detailed business description",
-            "Select relevant categories and attributes",
-            "List products/services",
-            "Publish regular weekly posts"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 3,
-          "action": "Verify Google Business Profile",
-          "category": "gbp",
-          "impact": "high",
-          "automation_available": false,
-          "estimated_time": "10-15 minutes (plus Google's verification time)",
-          "steps": [
-            "Login to Google Business Profile dashboard",
-            "Request verification (via mail, phone, or email)",
-            "Follow up and complete verification process"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 4,
-          "action": "Implement schema.org markup",
-          "category": "ai_search",
-          "impact": "medium",
-          "automation_available": true,
-          "estimated_time": "20-30 minutes",
-          "steps": [
-            "Add schema.org Product, Organization, and Review markup to your site",
-            "Use JSON-LD format for easier AI parsing",
-            "Test markup in Google's Rich Results Test"
-          ],
-          "can_start_now": true
-        },
-        {
-          "priority": 5,
-          "action": "Optimize website content for AI and search engines",
-          "category": "ai_search",
-          "impact": "medium",
-          "automation_available": true,
-          "estimated_time": "30-45 minutes",
-          "steps": [
-            "Add detailed product descriptions highlighting specialty/unique features",
-            "Increase NAP (Name, Address, Phone) consistency across site and directories",
-            "Create FAQ and comparison pages for better AI understanding"
+            "Approve GMC optimization request",
+            "Allow agent to scan and optimize account"
           ],
           "can_start_now": true
         }
       ],
       "recommendations": [
-        "Start by setting up your Google Merchant Center account to enable product listings in Google Shopping and increase purchase intent traffic.",
-        "Fully complete and verify your Google Business Profile to appear in local search and Maps, and build foundational entity recognition for AI algorithms.",
-        "Implement structured data (schema.org markup) for all products and organizational info\u2014this is critical for AI discovery.",
-        "Upgrade your website's product and brand content to directly answer common queries and comparison requests AI platforms resolve.",
-        "Regularly publish GBP posts and add new photos to signal business activity and improve ranking."
+        "Grant permission so I can analyze and optimize your Google Merchant Center product feed.",
+        "After approval, I will provide a detailed action plan and execute improvements automatically."
       ],
       "guided_workflows": [
-        "GMC Setup & Sync: Automate account creation, website connection, and feed upload for all coffee products.",
-        "GBP Automation: Auto-fill all business fields, upload stock photos, and schedule weekly posts from your site.",
-        "Schema Markup Wizard: Generate and insert schema.org Product, Organization, and Review markups based on your current catalog.",
-        "Content Optimizer: Use AI to rewrite product/category content focused on AI-search discoverability."
+        "Grant GMC Access & Run First Feed Optimization",
+        "Review Optimization Report & Fine-tune Automation Mode"
       ]
     },
     "metadata": {
       "agent_name": "AI-CRO Advisor Agent",
-      "timestamp": "2024-06-20T16:24:55Z"
+      "timestamp": "2024-06-17T16:19:41Z"
     }
   },
   "test_passed": true
